@@ -3,841 +3,1757 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Ashish AI Hub Pro - Phase 2</title>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<title>Ashish AI Hub Pro - Complete</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root {
-  --primary: #6C63FF;
-  --primary2: #FF6584;
-  --accent: #43E6FC;
-  --gold: #FFD700;
-  --green: #00C9A7;
-  --bg: #0D0D1A;
-  --card: #16162A;
-  --card2: #1E1E35;
-  --text: #F0F0FF;
-  --text2: #A0A0C0;
-  --grad1: linear-gradient(135deg,#6C63FF,#FF6584);
-  --grad2: linear-gradient(135deg,#43E6FC,#6C63FF);
-  --grad3: linear-gradient(135deg,#FFD700,#FF6584);
-  --grad4: linear-gradient(135deg,#00C9A7,#6C63FF);
-  --shadow: 0 8px 32px rgba(108,99,255,0.25);
-  --r: 20px; --rs: 12px;
+  /* Clean White Theme - ChatGPT Style */
+  --bg: #FFFFFF;
+  --bg-secondary: #F7F7F8;
+  --card: #FFFFFF;
+  --border: #E5E5E5;
+  --border-light: #F0F0F0;
+  --text: #1F1F1F;
+  --text-secondary: #6B6B6B;
+  --text-light: #9B9B9B;
+  --primary: #10A37F;
+  --primary-hover: #0E8C6F;
+  --shadow: 0 1px 3px rgba(0,0,0,0.08);
+  --shadow-lg: 0 2px 8px rgba(0,0,0,0.12);
+  --r: 12px;
 }
-.light {
-  --bg: #F0F0FF; --card: #fff; --card2: #F5F5FF;
-  --text: #1A1A3A; --text2: #6060A0;
-  --shadow: 0 8px 32px rgba(108,99,255,0.12);
+
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
 }
-*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;transition:background 0.3s,color 0.3s}
-.screen{display:none;min-height:100vh;width:100%;max-width:430px;margin:0 auto;position:relative;overflow:hidden}
-.screen.active{display:flex;flex-direction:column}
-@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
-@keyframes slideIn{from{opacity:0;transform:translateX(30px)}to{opacity:1;transform:translateX(0)}}
-@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
-@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
-@keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
 
-/* ── SHARED ── */
-.scroll-body{flex:1;overflow-y:auto;padding-bottom:100px}
-.scroll-body::-webkit-scrollbar{display:none}
-.page-header{padding:48px 20px 16px;display:flex;align-items:center;gap:12px}
-.back-btn{width:40px;height:40px;background:var(--card);border-radius:12px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:18px;flex-shrink:0;transition:transform 0.15s;border:1px solid rgba(255,255,255,0.06)}
-.back-btn:active{transform:scale(0.9)}
-.page-title{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;flex:1}
-.section{padding:16px 20px 0}
-.sec-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
-.sec-title{font-family:'Syne',sans-serif;font-size:16px;font-weight:700}
-.see-all{color:var(--primary);font-size:12px;font-weight:600;cursor:pointer}
-.btn-primary{width:100%;padding:16px;background:var(--grad1);border:none;border-radius:var(--r);color:#fff;font-family:'Syne',sans-serif;font-size:15px;font-weight:700;cursor:pointer;box-shadow:var(--shadow);transition:transform 0.15s}
-.btn-primary:active{transform:scale(0.97)}
-.btn-outline{width:100%;padding:14px;background:transparent;border:1.5px solid rgba(108,99,255,0.4);border-radius:var(--r);color:var(--primary);font-family:'Syne',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:all 0.2s}
+.screen {
+  display: none;
+  min-height: 100vh;
+  width: 100%;
+  max-width: 430px;
+  margin: 0 auto;
+  position: relative;
+  background: var(--bg);
+}
 
-/* ── BOTTOM NAV ── */
-.bnav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;z-index:100;background:var(--card);border-top:1px solid rgba(255,255,255,0.06);display:flex;padding:8px 0 20px;backdrop-filter:blur(20px)}
-.ni{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:6px 0;transition:all 0.2s}
-.ni-icon{font-size:22px;transition:transform 0.2s}
-.ni-label{font-size:10px;color:var(--text2);font-weight:500;transition:color 0.2s}
-.ni.active .ni-label{color:var(--primary)}
-.ni.active .ni-icon{transform:scale(1.15)}
-.nav-fab{width:52px;height:52px;border-radius:18px;background:var(--grad1);margin-top:-20px;display:flex;align-items:center;justify-content:center;font-size:24px;box-shadow:var(--shadow);cursor:pointer;transition:transform 0.2s}
-.nav-fab:active{transform:scale(0.9)}
+.screen.active {
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* ── SHARED COMPONENTS ── */
+.scroll-body {
+  flex: 1;
+  overflow-y: auto;
+  padding-bottom: 100px;
+}
+
+.scroll-body::-webkit-scrollbar {
+  display: none;
+}
+
+.page-header {
+  padding: 56px 20px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border-light);
+}
+
+.back-btn {
+  width: 36px;
+  height: 36px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background 0.2s;
+}
+
+.back-btn:hover {
+  background: var(--bg-secondary);
+}
+
+.page-title {
+  font-size: 18px;
+  font-weight: 600;
+  flex: 1;
+  color: var(--text);
+}
+
+.section {
+  padding: 20px;
+}
+
+.sec-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.sec-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.see-all {
+  color: var(--primary);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.btn-primary {
+  width: 100%;
+  padding: 14px;
+  background: var(--primary);
+  border: none;
+  border-radius: var(--r);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: var(--shadow);
+  transition: background 0.2s;
+}
+
+.btn-primary:hover {
+  background: var(--primary-hover);
+}
+
+.btn-outline {
+  width: 100%;
+  padding: 12px;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-outline:hover {
+  background: var(--bg-secondary);
+}
+
+/* ── BOTTOM NAVIGATION ── */
+.bnav {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 430px;
+  z-index: 100;
+  background: var(--bg);
+  border-top: 1px solid var(--border);
+  display: flex;
+  padding: 12px 0 20px;
+}
+
+.ni {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  padding: 8px 0;
+  transition: all 0.2s;
+}
+
+.ni-icon {
+  font-size: 20px;
+  color: var(--text-light);
+  transition: color 0.2s;
+}
+
+.ni-label {
+  font-size: 11px;
+  color: var(--text-light);
+  font-weight: 500;
+}
+
+.ni.active .ni-icon,
+.ni.active .ni-label {
+  color: var(--primary);
+}
+
+.nav-fab {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: var(--primary);
+  margin-top: -16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  color: #fff;
+  box-shadow: var(--shadow-lg);
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.nav-fab:active {
+  transform: scale(0.95);
+}
 
 /* ══════════════════════════════
-   HOME (carried over)
+   HOME SCREEN
 ══════════════════════════════ */
-#home{background:var(--bg)}
-.home-header{padding:48px 20px 20px;background:linear-gradient(180deg,rgba(108,99,255,0.08) 0%,transparent 100%)}
-.htop{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
-.avatar{width:42px;height:42px;border-radius:14px;background:var(--grad1);display:flex;align-items:center;justify-content:center;font-size:20px;cursor:pointer}
-.hactions{display:flex;gap:10px;align-items:center}
-.icon-btn{width:40px;height:40px;border-radius:12px;background:var(--card);border:1px solid rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:18px;position:relative;transition:transform 0.15s}
-.icon-btn:active{transform:scale(0.9)}
-.ndot{position:absolute;top:8px;right:8px;width:8px;height:8px;border-radius:50%;background:var(--primary2);border:2px solid var(--bg)}
-.greet{font-size:13px;color:var(--text2);margin-bottom:3px}
-.greet-name{font-family:'Syne',sans-serif;font-size:22px;font-weight:800}
-.search-bar{display:flex;align-items:center;gap:10px;background:var(--card);border:1.5px solid rgba(255,255,255,0.06);border-radius:16px;padding:13px 16px;margin-top:14px;cursor:pointer}
-.search-bar span{color:var(--text2);font-size:14px}
-.banner-wrap{overflow:hidden;margin:0 -20px;padding:0 20px}
-.banner-track{display:flex;gap:12px;transition:transform 0.4s ease}
-.banner-card{min-width:calc(100vw - 60px);max-width:370px;height:130px;border-radius:20px;display:flex;flex-direction:column;justify-content:flex-end;padding:18px;position:relative;overflow:hidden;cursor:pointer;flex-shrink:0}
-.bc1{background:var(--grad1)}.bc2{background:var(--grad2)}.bc3{background:var(--grad3)}
-.bc-circle{position:absolute;top:-20px;right:-20px;width:120px;height:120px;border-radius:50%;background:rgba(255,255,255,0.12)}
-.bc-emoji{position:absolute;top:14px;right:20px;font-size:34px}
-.bc-label{font-size:10px;font-weight:600;opacity:0.8;color:#fff;margin-bottom:3px}
-.bc-title{font-family:'Syne',sans-serif;font-size:16px;font-weight:800;color:#fff}
-.bdots{display:flex;gap:6px;justify-content:center;margin-top:10px}
-.bdot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,0.2);transition:all 0.3s}
-.bdot.active{width:18px;background:var(--primary)}
-.qgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
-.qi{display:flex;flex-direction:column;align-items:center;gap:7px;cursor:pointer;transition:transform 0.2s}
-.qi:active{transform:scale(0.9)}
-.qi-icon{width:54px;height:54px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:24px}
-.g1{background:linear-gradient(135deg,#6C63FF,#9C8FFF)}
-.g2{background:linear-gradient(135deg,#FF6584,#FF9A8B)}
-.g3{background:linear-gradient(135deg,#43E6FC,#0BC7E3)}
-.g4{background:linear-gradient(135deg,#FFD700,#FF9500)}
-.g5{background:linear-gradient(135deg,#00C9A7,#00A385)}
-.g6{background:linear-gradient(135deg,#A855F7,#7C3AED)}
-.g7{background:linear-gradient(135deg,#F97316,#EF4444)}
-.g8{background:linear-gradient(135deg,#EC4899,#BE185D)}
-.qi-label{font-size:10px;color:var(--text2);text-align:center;font-weight:500}
-.tools-scroll{display:flex;gap:12px;overflow-x:auto;padding-bottom:8px}
-.tools-scroll::-webkit-scrollbar{display:none}
-.tool-mini{min-width:140px;background:var(--card);border:1px solid rgba(255,255,255,0.06);border-radius:18px;padding:14px;cursor:pointer;flex-shrink:0;transition:transform 0.2s}
-.tool-mini:active{transform:scale(0.96)}
-.tm-icon{font-size:28px;margin-bottom:8px}
-.tm-name{font-family:'Syne',sans-serif;font-size:12px;font-weight:700;margin-bottom:3px}
-.tm-desc{font-size:10px;color:var(--text2)}
-.tm-badge{display:inline-block;margin-top:6px;padding:2px 8px;border-radius:50px;font-size:9px;font-weight:700}
-.live{background:rgba(0,201,167,0.15);color:var(--green)}
-.soon{background:rgba(108,99,255,0.15);color:var(--primary)}
-.act-list{display:flex;flex-direction:column;gap:10px}
-.act-item{display:flex;align-items:center;gap:12px;background:var(--card);border-radius:16px;padding:13px;border:1px solid rgba(255,255,255,0.04);cursor:pointer}
-.act-icon{width:42px;height:42px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
-.act-info{flex:1}
-.act-name{font-size:13px;font-weight:600;margin-bottom:2px}
-.act-time{font-size:11px;color:var(--text2)}
+#home {
+  background: var(--bg);
+}
+
+.home-header {
+  padding: 56px 20px 20px;
+  background: var(--bg);
+}
+
+.htop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  color: #fff;
+  cursor: pointer;
+}
+
+.hactions {
+  display: flex;
+  gap: 8px;
+}
+
+.icon-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background 0.2s;
+}
+
+.icon-btn:hover {
+  background: var(--bg-secondary);
+}
+
+.ndot {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--primary);
+}
+
+.greet {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-bottom: 4px;
+}
+
+.greet-name {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.search-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-light);
+  border-radius: var(--r);
+  padding: 12px 16px;
+  margin-top: 16px;
+  cursor: pointer;
+  transition: border 0.2s;
+}
+
+.search-bar:hover {
+  border-color: var(--border);
+}
+
+.search-bar span {
+  color: var(--text-light);
+  font-size: 14px;
+}
+
+.banner-wrap {
+  overflow: hidden;
+  margin: 0 -20px;
+  padding: 0 20px;
+}
+
+.banner-track {
+  display: flex;
+  gap: 12px;
+  transition: transform 0.4s ease;
+}
+
+.banner-card {
+  min-width: calc(100vw - 60px);
+  max-width: 370px;
+  height: 120px;
+  border-radius: var(--r);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 20px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.bc-emoji {
+  font-size: 32px;
+  margin-bottom: 8px;
+}
+
+.bc-label {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  margin-bottom: 4px;
+}
+
+.bc-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.bdots {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.bdot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--border);
+  transition: all 0.3s;
+}
+
+.bdot.active {
+  width: 20px;
+  background: var(--primary);
+}
+
+.qgrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+
+.qi {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.qi:active {
+  transform: scale(0.95);
+}
+
+.qi-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: var(--r);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+}
+
+.qi-label {
+  font-size: 11px;
+  color: var(--text-secondary);
+  text-align: center;
+  font-weight: 500;
+}
+
+.tools-scroll {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  padding-bottom: 8px;
+}
+
+.tools-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.tool-mini {
+  min-width: 140px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 16px;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: box-shadow 0.2s;
+}
+
+.tool-mini:hover {
+  box-shadow: var(--shadow-lg);
+}
+
+.tm-icon {
+  font-size: 24px;
+  margin-bottom: 8px;
+}
+
+.tm-name {
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 4px;
+  color: var(--text);
+}
+
+.tm-desc {
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+.tm-badge {
+  display: inline-block;
+  margin-top: 6px;
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.live {
+  background: #E6F7F3;
+  color: var(--primary);
+}
+
+.soon {
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+}
+
+.act-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.act-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--card);
+  border-radius: var(--r);
+  padding: 12px;
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.act-item:hover {
+  background: var(--bg-secondary);
+}
+
+.act-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: var(--bg-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.act-info {
+  flex: 1;
+}
+
+.act-name {
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 2px;
+  color: var(--text);
+}
+
+.act-time {
+  font-size: 11px;
+  color: var(--text-secondary);
+}
 
 /* ══════════════════════════════
    AI TOOLS PAGE
 ══════════════════════════════ */
-#aitools{background:var(--bg)}
-.tools-hero{margin:0 20px 20px;background:var(--grad1);border-radius:24px;padding:24px;position:relative;overflow:hidden}
-.th-circle{position:absolute;top:-30px;right:-30px;width:150px;height:150px;border-radius:50%;background:rgba(255,255,255,0.1)}
-.th-title{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:#fff;margin-bottom:6px}
-.th-sub{font-size:13px;color:rgba(255,255,255,0.8)}
-.th-emoji{position:absolute;top:20px;right:24px;font-size:48px;animation:float 3s ease-in-out infinite}
-.tools-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.tool-card{background:var(--card);border:1px solid rgba(255,255,255,0.06);border-radius:20px;padding:18px;cursor:pointer;transition:transform 0.2s,box-shadow 0.2s;position:relative;overflow:hidden}
-.tool-card:active{transform:scale(0.96)}
-.tool-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
-.tc1::before{background:var(--grad1)}
-.tc2::before{background:var(--grad2)}
-.tc3::before{background:var(--grad3)}
-.tc4::before{background:var(--grad4)}
-.tc5::before{background:linear-gradient(135deg,#A855F7,#EC4899)}
-.tc6::before{background:linear-gradient(135deg,#F97316,#FFD700)}
-.tc7::before{background:linear-gradient(135deg,#43E6FC,#00C9A7)}
-.tc8::before{background:linear-gradient(135deg,#FF6584,#A855F7)}
-.tc9::before{background:linear-gradient(135deg,#6C63FF,#43E6FC)}
-.tc-icon{font-size:32px;margin-bottom:10px}
-.tc-name{font-family:'Syne',sans-serif;font-size:13px;font-weight:700;margin-bottom:4px}
-.tc-desc{font-size:11px;color:var(--text2);line-height:1.4}
-.tc-badge{display:inline-block;margin-top:8px;padding:3px 8px;border-radius:50px;font-size:9px;font-weight:700}
+#aitools {
+  background: var(--bg);
+}
 
-/* AI Writer Modal */
-.ai-modal{position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:200;display:flex;align-items:flex-end;justify-content:center;backdrop-filter:blur(4px);animation:fadeIn 0.2s both}
-@keyframes fadeIn{from{opacity:0}to{opacity:1}}
-.ai-modal-box{width:100%;max-width:430px;background:var(--card);border-radius:32px 32px 0 0;padding:24px 20px 48px;animation:slideUp 0.3s cubic-bezier(0.34,1.56,0.64,1) both;max-height:85vh;overflow-y:auto}
-@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
-.modal-handle{width:40px;height:4px;border-radius:2px;background:rgba(255,255,255,0.15);margin:0 auto 20px}
-.modal-title{font-family:'Syne',sans-serif;font-size:18px;font-weight:800;margin-bottom:6px}
-.modal-sub{color:var(--text2);font-size:12px;margin-bottom:18px}
-.modal-textarea{width:100%;padding:14px;background:var(--bg);border:1.5px solid rgba(255,255,255,0.08);border-radius:14px;color:var(--text);font-size:14px;outline:none;resize:none;font-family:'DM Sans',sans-serif;min-height:100px;margin-bottom:14px;transition:border-color 0.2s}
-.modal-textarea:focus{border-color:var(--primary)}
-.modal-result{background:var(--bg);border-radius:14px;padding:14px;font-size:13px;line-height:1.7;color:var(--text);min-height:80px;margin-bottom:16px;border:1px solid rgba(255,255,255,0.06)}
-.chip-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
-.chip{padding:7px 14px;background:var(--card2);border-radius:50px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid rgba(255,255,255,0.06);transition:all 0.2s;color:var(--text2)}
-.chip.active{background:rgba(108,99,255,0.2);border-color:var(--primary);color:var(--primary)}
-.loading-dots{display:flex;gap:6px;justify-content:center;padding:20px}
-.ldot{width:10px;height:10px;border-radius:50%;background:var(--primary);animation:pulse 1.2s infinite}
-.ldot:nth-child(2){animation-delay:0.2s;background:var(--primary2)}
-.ldot:nth-child(3){animation-delay:0.4s;background:var(--accent)}
+.tools-hero {
+  margin: 0 20px 20px;
+  background: var(--primary);
+  border-radius: var(--r);
+  padding: 24px;
+  position: relative;
+  overflow: hidden;
+}
 
-/* ══════════════════════════════
-   SOCIAL PAGE
-══════════════════════════════ */
-#social{background:var(--bg)}
-.story-row{display:flex;gap:12px;overflow-x:auto;padding:0 20px 12px}
-.story-row::-webkit-scrollbar{display:none}
-.story-item{display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;flex-shrink:0}
-.story-ring{width:64px;height:64px;border-radius:50%;padding:3px;background:var(--grad1);position:relative}
-.story-ring.add-story{background:var(--card);border:2px dashed rgba(108,99,255,0.4)}
-.story-avatar{width:100%;height:100%;border-radius:50%;background:var(--card2);display:flex;align-items:center;justify-content:center;font-size:28px;border:2px solid var(--bg)}
-.story-name{font-size:10px;color:var(--text2);text-align:center;max-width:64px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.post-card{background:var(--card);border-radius:20px;margin:0 20px 16px;border:1px solid rgba(255,255,255,0.06);overflow:hidden;animation:fadeUp 0.4s both}
-.post-header{display:flex;align-items:center;gap:10px;padding:14px 14px 10px}
-.post-avatar{width:40px;height:40px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
-.post-user{font-size:13px;font-weight:600}
-.post-time{font-size:11px;color:var(--text2)}
-.post-follow{margin-left:auto;padding:6px 14px;background:rgba(108,99,255,0.15);border-radius:50px;font-size:11px;font-weight:700;color:var(--primary);cursor:pointer;border:1px solid rgba(108,99,255,0.3);transition:all 0.2s}
-.post-follow.following{background:rgba(0,201,167,0.1);color:var(--green);border-color:rgba(0,201,167,0.3)}
-.post-img{width:100%;height:200px;display:flex;align-items:center;justify-content:center;font-size:80px;position:relative;overflow:hidden}
-.post-img-bg1{background:linear-gradient(135deg,rgba(108,99,255,0.3),rgba(255,101,132,0.3))}
-.post-img-bg2{background:linear-gradient(135deg,rgba(67,230,252,0.3),rgba(108,99,255,0.3))}
-.post-img-bg3{background:linear-gradient(135deg,rgba(255,215,0,0.3),rgba(255,101,132,0.3))}
-.post-text{padding:12px 14px;font-size:13px;line-height:1.6;color:var(--text2)}
-.post-actions{display:flex;align-items:center;gap:0;padding:8px 14px 14px;border-top:1px solid rgba(255,255,255,0.04)}
-.pact{display:flex;align-items:center;gap:6px;padding:8px 14px;border-radius:10px;cursor:pointer;transition:all 0.2s;flex:1;justify-content:center;font-size:12px;font-weight:600;color:var(--text2)}
-.pact:active{background:rgba(108,99,255,0.1)}
-.pact.liked{color:var(--primary2)}
-.pact-icon{font-size:18px}
-.friend-row{display:flex;gap:12px;overflow-x:auto;padding:0 20px 4px}
-.friend-row::-webkit-scrollbar{display:none}
-.friend-card{min-width:120px;background:var(--card);border-radius:18px;padding:14px;display:flex;flex-direction:column;align-items:center;gap:8px;flex-shrink:0;border:1px solid rgba(255,255,255,0.06)}
-.fc-avatar{width:50px;height:50px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:26px}
-.fc-name{font-size:12px;font-weight:600;text-align:center}
-.fc-btn{padding:6px 14px;border-radius:50px;font-size:10px;font-weight:700;cursor:pointer;border:none;transition:all 0.2s}
-.fc-add{background:var(--grad1);color:#fff}
-.fc-added{background:rgba(0,201,167,0.15);color:var(--green)}
+.th-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 6px;
+}
+
+.th-sub {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.th-emoji {
+  position: absolute;
+  top: 20px;
+  right: 24px;
+  font-size: 40px;
+}
+
+.tools-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.tool-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 16px;
+  cursor: pointer;
+  transition: box-shadow 0.2s;
+}
+
+.tool-card:hover {
+  box-shadow: var(--shadow-lg);
+}
+
+.tool-icon {
+  font-size: 28px;
+  margin-bottom: 12px;
+}
+
+.tool-name {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 4px;
+  color: var(--text);
+}
+
+.tool-desc {
+  font-size: 11px;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
 
 /* ══════════════════════════════
-   SHOPPING PAGE
+   AI CHAT PAGE
 ══════════════════════════════ */
-#shopping{background:var(--bg)}
-.shop-cats{display:flex;gap:10px;overflow-x:auto;padding:0 20px 4px;margin-bottom:4px}
-.shop-cats::-webkit-scrollbar{display:none}
-.cat-chip{padding:9px 18px;border-radius:50px;font-size:12px;font-weight:700;white-space:nowrap;cursor:pointer;transition:all 0.2s;flex-shrink:0}
-.cat-chip.active{background:var(--grad1);color:#fff;box-shadow:var(--shadow)}
-.cat-chip:not(.active){background:var(--card);color:var(--text2);border:1px solid rgba(255,255,255,0.06)}
-.prod-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:0 20px}
-.prod-card{background:var(--card);border-radius:20px;overflow:hidden;border:1px solid rgba(255,255,255,0.06);cursor:pointer;transition:transform 0.2s;animation:fadeUp 0.4s both}
-.prod-card:active{transform:scale(0.97)}
-.prod-img{height:140px;display:flex;align-items:center;justify-content:center;font-size:56px;position:relative}
-.pi1{background:linear-gradient(135deg,rgba(108,99,255,0.2),rgba(255,101,132,0.2))}
-.pi2{background:linear-gradient(135deg,rgba(67,230,252,0.2),rgba(108,99,255,0.2))}
-.pi3{background:linear-gradient(135deg,rgba(255,215,0,0.2),rgba(255,101,132,0.2))}
-.pi4{background:linear-gradient(135deg,rgba(0,201,167,0.2),rgba(108,99,255,0.2))}
-.pi5{background:linear-gradient(135deg,rgba(168,85,247,0.2),rgba(236,72,153,0.2))}
-.pi6{background:linear-gradient(135deg,rgba(249,115,22,0.2),rgba(255,215,0,0.2))}
-.wish-btn{position:absolute;top:10px;right:10px;width:30px;height:30px;border-radius:10px;background:rgba(0,0,0,0.3);display:flex;align-items:center;justify-content:center;font-size:14px;backdrop-filter:blur(4px);transition:transform 0.2s}
-.wish-btn:active{transform:scale(0.85)}
-.prod-info{padding:12px}
-.prod-name{font-size:13px;font-weight:600;margin-bottom:4px}
-.prod-price{font-family:'Syne',sans-serif;font-size:15px;font-weight:800;color:var(--primary)}
-.prod-orig{font-size:11px;color:var(--text2);text-decoration:line-through;margin-left:4px}
-.prod-rating{font-size:11px;color:var(--gold);margin-top:4px}
-.prod-btn{margin-top:8px;width:100%;padding:8px;background:var(--grad1);border:none;border-radius:10px;color:#fff;font-size:11px;font-weight:700;cursor:pointer;transition:transform 0.15s}
-.prod-btn:active{transform:scale(0.96)}
-.cart-badge{position:fixed;top:52px;right:24px;background:var(--primary2);color:#fff;font-size:10px;font-weight:800;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;z-index:50;animation:fadeUp 0.3s both}
-.offer-banner{margin:0 20px 16px;background:var(--grad3);border-radius:20px;padding:16px 20px;display:flex;align-items:center;justify-content:space-between;cursor:pointer}
-.ob-text{font-family:'Syne',sans-serif;font-size:15px;font-weight:800;color:#fff}
-.ob-sub{font-size:11px;color:rgba(255,255,255,0.8);margin-top:2px}
-.ob-emoji{font-size:36px}
+#aichat {
+  background: var(--bg);
+}
+
+.chat-header {
+  padding: 56px 20px 16px;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border-light);
+}
+
+.chat-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+
+.chat-status {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.chat-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+  padding-bottom: 140px;
+}
+
+.chat-body::-webkit-scrollbar {
+  display: none;
+}
+
+.empty-chat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: 40px 20px;
+  text-align: center;
+}
+
+.ec-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+}
+
+.ec-title {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: var(--text);
+}
+
+.ec-desc {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-bottom: 20px;
+}
+
+.quick-prompts {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  max-width: 300px;
+}
+
+.qp-btn {
+  padding: 12px 16px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  font-size: 13px;
+  color: var(--text);
+  cursor: pointer;
+  transition: background 0.2s;
+  text-align: left;
+}
+
+.qp-btn:hover {
+  background: var(--border-light);
+}
+
+.msgs {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.msg {
+  display: flex;
+  gap: 12px;
+  animation: fadeIn 0.3s;
+}
+
+.msg.user {
+  flex-direction: row-reverse;
+}
+
+.msg-av {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--bg-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.msg.user .msg-av {
+  background: var(--primary);
+  color: #fff;
+}
+
+.bubble {
+  max-width: 75%;
+  padding: 12px 16px;
+  background: var(--bg-secondary);
+  border-radius: var(--r);
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--text);
+}
+
+.msg.user .bubble {
+  background: var(--primary);
+  color: #fff;
+}
+
+.msg-t {
+  font-size: 10px;
+  color: var(--text-light);
+  margin-top: 4px;
+  text-align: right;
+}
+
+.typing {
+  display: flex;
+  gap: 4px;
+  padding: 4px 0;
+}
+
+.td {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--text-light);
+  animation: pulse 1.4s infinite;
+}
+
+.td:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.td:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+.chat-input {
+  position: fixed;
+  bottom: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 430px;
+  padding: 0 20px;
+  z-index: 50;
+}
+
+.input-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 8px 12px;
+  box-shadow: var(--shadow-lg);
+}
+
+.input-wrap input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  font-size: 14px;
+  color: var(--text);
+  outline: none;
+  font-family: inherit;
+}
+
+.input-wrap input::placeholder {
+  color: var(--text-light);
+}
+
+.send-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: var(--primary);
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 16px;
+  color: #fff;
+  transition: background 0.2s;
+}
+
+.send-btn:hover {
+  background: var(--primary-hover);
+}
+
+.send-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.api-notice {
+  padding: 12px 16px;
+  background: #FFF4E6;
+  border: 1px solid #FFE5B4;
+  border-radius: var(--r);
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.api-notice-icon {
+  font-size: 20px;
+}
+
+.api-notice-text {
+  flex: 1;
+  font-size: 12px;
+  color: #8B4513;
+}
+
+.api-notice-btn {
+  padding: 6px 12px;
+  background: #8B4513;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+}
 
 /* ══════════════════════════════
-   WALLET PAGE
+   PHASE 4: PROFILE PAGE
 ══════════════════════════════ */
-#wallet{background:var(--bg)}
-.wallet-card{margin:0 20px 20px;background:var(--grad1);border-radius:28px;padding:24px;position:relative;overflow:hidden}
-.wc-circle1{position:absolute;top:-40px;right:-40px;width:160px;height:160px;border-radius:50%;background:rgba(255,255,255,0.1)}
-.wc-circle2{position:absolute;bottom:-30px;left:-30px;width:120px;height:120px;border-radius:50%;background:rgba(255,255,255,0.08)}
-.wc-label{font-size:12px;color:rgba(255,255,255,0.75);margin-bottom:6px;position:relative;z-index:2}
-.wc-balance{font-family:'Syne',sans-serif;font-size:36px;font-weight:800;color:#fff;position:relative;z-index:2;margin-bottom:4px}
-.wc-coins{font-size:13px;color:rgba(255,255,255,0.8);position:relative;z-index:2;display:flex;align-items:center;gap:6px}
-.wc-actions{display:flex;gap:10px;margin-top:20px;position:relative;z-index:2}
-.wc-btn{flex:1;padding:11px;background:rgba(255,255,255,0.2);border:none;border-radius:14px;color:#fff;font-size:12px;font-weight:700;cursor:pointer;backdrop-filter:blur(4px);transition:all 0.2s;display:flex;align-items:center;justify-content:center;gap:6px}
-.wc-btn:active{background:rgba(255,255,255,0.3)}
-.earn-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.earn-card{background:var(--card);border-radius:20px;padding:18px;border:1px solid rgba(255,255,255,0.06);cursor:pointer;transition:transform 0.2s;position:relative;overflow:hidden}
-.earn-card:active{transform:scale(0.96)}
-.earn-card::after{content:'';position:absolute;top:0;right:0;bottom:0;left:0;background:var(--grad1);opacity:0;transition:opacity 0.2s;border-radius:20px}
-.earn-card:active::after{opacity:0.05}
-.ec-icon{font-size:32px;margin-bottom:10px}
-.ec-title{font-family:'Syne',sans-serif;font-size:13px;font-weight:700;margin-bottom:4px}
-.ec-desc{font-size:11px;color:var(--text2);line-height:1.4}
-.ec-reward{display:inline-flex;align-items:center;gap:4px;margin-top:8px;padding:4px 10px;background:rgba(255,215,0,0.15);border-radius:50px;font-size:10px;font-weight:700;color:var(--gold)}
-.txn-list{display:flex;flex-direction:column;gap:10px}
-.txn-item{display:flex;align-items:center;gap:12px;background:var(--card);border-radius:16px;padding:13px;border:1px solid rgba(255,255,255,0.04)}
-.txn-icon{width:40px;height:40px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
-.txn-info{flex:1}
-.txn-name{font-size:13px;font-weight:600;margin-bottom:2px}
-.txn-date{font-size:11px;color:var(--text2)}
-.txn-amt{font-family:'Syne',sans-serif;font-size:14px;font-weight:800}
-.txn-pos{color:var(--green)}
-.txn-neg{color:var(--primary2)}
-.coin-display{display:inline-flex;align-items:center;gap:6px;background:rgba(255,215,0,0.1);border:1px solid rgba(255,215,0,0.25);border-radius:50px;padding:8px 16px;margin:0 20px 16px}
-.coin-display span{font-size:16px}
-.coin-display b{font-family:'Syne',sans-serif;font-size:15px;font-weight:800;color:var(--gold)}
+#profile {
+  background: var(--bg);
+}
+
+.profile-header {
+  padding: 56px 20px 24px;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border-light);
+  text-align: center;
+}
+
+.profile-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: var(--primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 36px;
+  color: #fff;
+  margin: 0 auto 12px;
+}
+
+.profile-name {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+
+.profile-email {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.stats-row {
+  display: flex;
+  gap: 12px;
+  margin: 20px 0;
+}
+
+.stat-box {
+  flex: 1;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 16px;
+  text-align: center;
+}
+
+.stat-value {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+
+.stat-label {
+  font-size: 11px;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.menu-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  background: var(--border-light);
+}
+
+.menu-group {
+  background: var(--bg);
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 20px;
+  background: var(--bg);
+  cursor: pointer;
+  transition: background 0.2s;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.menu-item:last-child {
+  border-bottom: none;
+}
+
+.menu-item:hover {
+  background: var(--bg-secondary);
+}
+
+.menu-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: var(--bg-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.menu-info {
+  flex: 1;
+}
+
+.menu-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 2px;
+}
+
+.menu-desc {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.menu-arrow {
+  font-size: 14px;
+  color: var(--text-light);
+}
+
+.menu-badge {
+  padding: 3px 8px;
+  background: var(--primary);
+  color: #fff;
+  border-radius: 6px;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.logout-btn {
+  margin: 20px;
+  padding: 14px;
+  background: transparent;
+  border: 1px solid #E53E3E;
+  border-radius: var(--r);
+  color: #E53E3E;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.logout-btn:hover {
+  background: #FFF5F5;
+}
 
 /* ══════════════════════════════
-   PROFILE PAGE
+   MODALS
 ══════════════════════════════ */
-#profile{background:var(--bg)}
-.profile-hero{background:var(--grad1);padding:56px 20px 80px;position:relative;overflow:hidden;text-align:center}
-.ph-circle1{position:absolute;top:-50px;right:-50px;width:200px;height:200px;border-radius:50%;background:rgba(255,255,255,0.1)}
-.ph-circle2{position:absolute;bottom:-30px;left:-30px;width:150px;height:150px;border-radius:50%;background:rgba(255,255,255,0.08)}
-.profile-avatar-wrap{position:relative;display:inline-block;z-index:2}
-.profile-avatar{width:90px;height:90px;border-radius:28px;background:rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;font-size:44px;border:3px solid rgba(255,255,255,0.4);margin:0 auto 12px}
-.edit-avatar{position:absolute;bottom:-4px;right:-4px;width:28px;height:28px;border-radius:9px;background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:14px;cursor:pointer;border:2px solid var(--grad1)}
-.profile-name{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:#fff;position:relative;z-index:2;margin-bottom:4px}
-.profile-email{font-size:13px;color:rgba(255,255,255,0.75);position:relative;z-index:2;margin-bottom:16px}
-.profile-badges{display:flex;gap:8px;justify-content:center;position:relative;z-index:2}
-.pbadge{padding:6px 14px;background:rgba(255,255,255,0.2);border-radius:50px;font-size:11px;font-weight:700;color:#fff;backdrop-filter:blur(4px)}
-.profile-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(255,255,255,0.06);margin:0 20px;border-radius:20px;overflow:hidden;margin-top:-30px;position:relative;z-index:5;background:var(--card)}
-.ps-item{padding:16px;text-align:center;background:var(--card)}
-.ps-val{font-family:'Syne',sans-serif;font-size:20px;font-weight:800}
-.ps-key{font-size:10px;color:var(--text2);margin-top:2px}
-.menu-list{display:flex;flex-direction:column;gap:8px;padding:16px 20px}
-.menu-item{display:flex;align-items:center;gap:14px;background:var(--card);border-radius:16px;padding:15px;cursor:pointer;border:1px solid rgba(255,255,255,0.04);transition:all 0.2s}
-.menu-item:active{transform:scale(0.98);background:var(--card2)}
-.mi-icon{width:42px;height:42px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
-.mi-info{flex:1}
-.mi-title{font-size:14px;font-weight:600;margin-bottom:2px}
-.mi-sub{font-size:11px;color:var(--text2)}
-.mi-arrow{color:var(--text2);font-size:16px}
-.mi-badge{padding:3px 10px;border-radius:50px;font-size:10px;font-weight:700}
-.badge-pro{background:rgba(255,215,0,0.15);color:var(--gold)}
-.badge-new{background:rgba(108,99,255,0.15);color:var(--primary)}
-.logout-btn{margin:0 20px 20px;padding:16px;background:rgba(255,101,132,0.1);border:1.5px solid rgba(255,101,132,0.3);border-radius:var(--r);color:var(--primary2);font-family:'Syne',sans-serif;font-size:15px;font-weight:700;cursor:pointer;width:calc(100% - 40px);transition:all 0.2s;display:flex;align-items:center;justify-content:center;gap:8px}
-.logout-btn:active{background:rgba(255,101,132,0.2)}
+.ai-modal,
+.key-modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 200;
+  align-items: flex-end;
+  backdrop-filter: blur(4px);
+}
+
+.modal-content {
+  width: 100%;
+  max-width: 430px;
+  max-height: 85vh;
+  background: var(--bg);
+  border-radius: var(--r) var(--r) 0 0;
+  padding: 24px;
+  overflow-y: auto;
+  margin: 0 auto;
+  animation: slideUp 0.3s;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.modal-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.modal-close {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: var(--bg-secondary);
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 18px;
+  color: var(--text);
+}
+
+.modal-sub {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-bottom: 20px;
+}
+
+.tool-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.chip {
+  padding: 8px 14px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  font-size: 12px;
+  color: var(--text);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.chip:hover {
+  background: var(--border-light);
+}
+
+.chip.active {
+  background: var(--primary);
+  color: #fff;
+  border-color: var(--primary);
+}
+
+.tool-input {
+  width: 100%;
+  padding: 12px 16px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  font-size: 14px;
+  color: var(--text);
+  font-family: inherit;
+  resize: vertical;
+  min-height: 100px;
+  margin-bottom: 16px;
+  outline: none;
+}
+
+.tool-input:focus {
+  border-color: var(--primary);
+}
+
+.tool-result {
+  display: none;
+  padding: 16px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--text);
+  margin-top: 16px;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.loading-dots {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  padding: 20px;
+}
+
+.ldot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--primary);
+  animation: pulse 1.4s infinite;
+}
+
+.ldot:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.ldot:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+.key-input {
+  width: 100%;
+  padding: 12px 16px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  font-size: 14px;
+  color: var(--text);
+  font-family: 'Courier New', monospace;
+  margin-bottom: 16px;
+  outline: none;
+}
+
+.key-input:focus {
+  border-color: var(--primary);
+}
+
+.key-help {
+  padding: 12px 16px;
+  background: #E6F7F3;
+  border: 1px solid #B8E6D9;
+  border-radius: var(--r);
+  margin-bottom: 16px;
+}
+
+.key-help-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--primary);
+  margin-bottom: 6px;
+}
+
+.key-help-text {
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.key-help a {
+  color: var(--primary);
+  text-decoration: none;
+  font-weight: 600;
+}
 
 /* ══════════════════════════════
-   AI CHAT (Phase 2 enhanced)
+   RESPONSIVE
 ══════════════════════════════ */
-#aichat{background:var(--bg)}
-.chat-hdr{padding:48px 20px 14px;display:flex;align-items:center;gap:12px;border-bottom:1px solid rgba(255,255,255,0.06)}
-.chat-av{width:44px;height:44px;border-radius:14px;background:var(--grad1);display:flex;align-items:center;justify-content:center;font-size:24px}
-.chat-info{flex:1}
-.chat-name{font-family:'Syne',sans-serif;font-size:16px;font-weight:700}
-.chat-status{font-size:11px;color:var(--green);display:flex;align-items:center;gap:4px}
-.sdot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
-.msgs{flex:1;overflow-y:auto;padding:14px 16px 0}
-.msgs::-webkit-scrollbar{display:none}
-.msg{display:flex;gap:8px;margin-bottom:14px;animation:fadeUp 0.3s both}
-.msg.user{flex-direction:row-reverse}
-.msg-av{width:30px;height:30px;border-radius:10px;flex-shrink:0;background:var(--grad1);display:flex;align-items:center;justify-content:center;font-size:15px;align-self:flex-end}
-.msg.user .msg-av{background:var(--grad2)}
-.bubble{max-width:75%;padding:11px 14px;border-radius:16px 16px 16px 4px;background:var(--card);font-size:13px;line-height:1.5;border:1px solid rgba(255,255,255,0.06)}
-.msg.user .bubble{background:var(--grad1);border:none;border-radius:16px 16px 4px 16px;color:#fff}
-.msg-t{font-size:9px;color:var(--text2);margin-top:3px;padding:0 4px}
-.typing{display:flex;gap:4px;padding:10px 14px}
-.td{width:7px;height:7px;border-radius:50%;background:var(--primary);animation:pulse 1.2s infinite}
-.td:nth-child(2){animation-delay:0.2s}.td:nth-child(3){animation-delay:0.4s}
-.chat-inp-area{padding:10px 16px 32px;border-top:1px solid rgba(255,255,255,0.06);display:flex;align-items:center;gap:10px}
-.chat-inp-wrap{flex:1;background:var(--card);border:1.5px solid rgba(255,255,255,0.08);border-radius:16px;display:flex;align-items:center;padding:0 14px;transition:border-color 0.2s}
-.chat-inp-wrap:focus-within{border-color:var(--primary)}
-.chat-inp-wrap input{flex:1;background:transparent;border:none;outline:none;color:var(--text);font-size:14px;padding:13px 0;font-family:'DM Sans',sans-serif}
-.chat-inp-wrap input::placeholder{color:var(--text2)}
-.send-btn{width:46px;height:46px;border-radius:14px;background:var(--grad1);border:none;color:#fff;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:var(--shadow);transition:transform 0.15s}
-.send-btn:active{transform:scale(0.9)}
-.send-btn:disabled{opacity:0.5}
-.api-notice{background:rgba(255,165,0,0.1);border:1px solid rgba(255,165,0,0.3);border-radius:12px;padding:9px 14px;margin:6px 16px;font-size:11px;color:#FFA500;line-height:1.5}
-.quick-prompts{display:flex;gap:8px;overflow-x:auto;padding:8px 16px;border-bottom:1px solid rgba(255,255,255,0.04)}
-.quick-prompts::-webkit-scrollbar{display:none}
-.qp{padding:7px 14px;background:var(--card);border:1px solid rgba(255,255,255,0.08);border-radius:50px;font-size:11px;font-weight:600;cursor:pointer;white-space:nowrap;color:var(--text2);transition:all 0.2s;flex-shrink:0}
-.qp:active{background:rgba(108,99,255,0.15);color:var(--primary);border-color:var(--primary)}
-
-/* key modal */
-.key-modal{position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:300;display:flex;align-items:flex-end;justify-content:center;backdrop-filter:blur(4px)}
-.key-box{width:100%;max-width:430px;background:var(--card);border-radius:32px 32px 0 0;padding:24px 20px 48px;animation:slideUp 0.3s cubic-bezier(0.34,1.56,0.64,1) both}
-.key-input{width:100%;padding:14px;background:var(--bg);border:1.5px solid rgba(255,255,255,0.08);border-radius:14px;color:var(--text);font-size:14px;outline:none;margin-bottom:12px;font-family:'DM Sans',sans-serif;transition:border-color 0.2s}
-.key-input:focus{border-color:var(--primary)}
+@media (max-width: 375px) {
+  .qgrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  
+  .tools-grid {
+    grid-template-columns: 1fr;
+  }
+}
 </style>
 </head>
 <body>
 
-<!-- ═══════════ HOME ═══════════ -->
+<!-- ══════════════════════════════
+     HOME SCREEN
+══════════════════════════════ -->
 <div id="home" class="screen active">
-  <div class="scroll-body">
-    <div class="home-header">
-      <div class="htop">
-        <div class="avatar" onclick="go('profile')">😊</div>
-        <div style="flex:1;padding:0 12px">
-          <div class="greet">Good Morning,</div>
-          <div class="greet-name" id="uname">Ashish! 👋</div>
+  <div class="home-header">
+    <div class="htop">
+      <div class="avatar" onclick="navTo('profile')">👤</div>
+      <div class="hactions">
+        <div class="icon-btn" onclick="showKeyModal()">⚙️</div>
+        <div class="icon-btn" style="position:relative">
+          🔔
+          <div class="ndot"></div>
         </div>
-        <div class="hactions">
-          <div class="icon-btn" onclick="toggleTheme()" id="themeBtn">🌙</div>
-          <div class="icon-btn">🔔<div class="ndot"></div></div>
-        </div>
-      </div>
-      <div class="search-bar">
-        <span>🔍</span><span>Search AI tools, features...</span>
       </div>
     </div>
+    <div class="greet">Namaste</div>
+    <div class="greet-name">Ashish! 👋</div>
+    <div class="search-bar" onclick="navTo('aichat')">
+      🔍 <span>AI se kuch bhi poocho...</span>
+    </div>
+  </div>
 
+  <div class="scroll-body">
     <div class="section">
       <div class="banner-wrap">
-        <div class="banner-track" id="bt">
-          <div class="banner-card bc1"><div class="bc-circle"></div><div class="bc-emoji">🎁</div><div class="bc-label">LIMITED OFFER</div><div class="bc-title">Get Pro Free 7 Days!</div></div>
-          <div class="banner-card bc2"><div class="bc-circle"></div><div class="bc-emoji">🤖</div><div class="bc-label">NEW FEATURE</div><div class="bc-title">Gemini AI Now Live!</div></div>
-          <div class="banner-card bc3"><div class="bc-circle"></div><div class="bc-emoji">💰</div><div class="bc-label">EARN REWARDS</div><div class="bc-title">Refer & Earn ₹100!</div></div>
+        <div class="banner-track" id="bannerTrack">
+          <div class="banner-card">
+            <div class="bc-emoji">🤖</div>
+            <div class="bc-label">AI ASSISTANT</div>
+            <div class="bc-title">Smart AI Chat</div>
+          </div>
+          <div class="banner-card">
+            <div class="bc-emoji">✨</div>
+            <div class="bc-label">AI TOOLS</div>
+            <div class="bc-title">Powerful Features</div>
+          </div>
+          <div class="banner-card">
+            <div class="bc-emoji">🚀</div>
+            <div class="bc-label">BOOST PRODUCTIVITY</div>
+            <div class="bc-title">Get More Done</div>
+          </div>
         </div>
       </div>
-      <div class="bdots" id="bdots"><div class="bdot active"></div><div class="bdot"></div><div class="bdot"></div></div>
-    </div>
-
-    <div class="section" style="margin-top:8px">
-      <div class="sec-head"><div class="sec-title">⚡ Quick Access</div></div>
-      <div class="qgrid">
-        <div class="qi" onclick="go('aichat')"><div class="qi-icon g1">🤖</div><div class="qi-label">AI Chat</div></div>
-        <div class="qi" onclick="go('aitools')"><div class="qi-icon g2">🛠️</div><div class="qi-label">AI Tools</div></div>
-        <div class="qi" onclick="go('social')"><div class="qi-icon g3">👥</div><div class="qi-label">Social</div></div>
-        <div class="qi" onclick="go('shopping')"><div class="qi-icon g4">🛒</div><div class="qi-label">Shopping</div></div>
-        <div class="qi" onclick="alert('Games — Phase 3!')"><div class="qi-icon g5">🎮</div><div class="qi-label">Games</div></div>
-        <div class="qi" onclick="go('wallet')"><div class="qi-icon g6">💳</div><div class="qi-label">Wallet</div></div>
-        <div class="qi" onclick="alert('Notes — Phase 3!')"><div class="qi-icon g7">📝</div><div class="qi-label">Notes</div></div>
-        <div class="qi" onclick="alert('Premium — Phase 3!')"><div class="qi-icon g8">⭐</div><div class="qi-label">Premium</div></div>
+      <div class="bdots" id="bannerDots">
+        <div class="bdot active"></div>
+        <div class="bdot"></div>
+        <div class="bdot"></div>
       </div>
     </div>
-
-    <div class="section" style="margin-top:20px">
-      <div class="sec-head"><div class="sec-title">🔥 Trending Tools</div><div class="see-all" onclick="go('aitools')">View all</div></div>
-      <div class="tools-scroll">
-        <div class="tool-mini" onclick="go('aichat')"><div class="tm-icon">💬</div><div class="tm-name">AI Chatbot</div><div class="tm-desc">Chat with Gemini</div><div class="tm-badge live">LIVE ✅</div></div>
-        <div class="tool-mini" onclick="openTool('writer')"><div class="tm-icon">✍️</div><div class="tm-name">AI Writer</div><div class="tm-desc">Write anything</div><div class="tm-badge live">LIVE ✅</div></div>
-        <div class="tool-mini" onclick="openTool('caption')"><div class="tm-icon">📱</div><div class="tm-name">Caption AI</div><div class="tm-desc">Social captions</div><div class="tm-badge live">LIVE ✅</div></div>
-        <div class="tool-mini" onclick="openTool('resume')"><div class="tm-icon">📄</div><div class="tm-name">Resume Maker</div><div class="tm-desc">Pro resumes</div><div class="tm-badge live">LIVE ✅</div></div>
-      </div>
-    </div>
-
-    <div class="section" style="margin-top:20px;margin-bottom:16px">
-      <div class="sec-head"><div class="sec-title">🕐 Recent Activity</div></div>
-      <div class="act-list">
-        <div class="act-item" onclick="go('aichat')"><div class="act-icon g1">🤖</div><div class="act-info"><div class="act-name">AI Chat Session</div><div class="act-time">2 min ago</div></div><span style="color:var(--text2)">›</span></div>
-        <div class="act-item" onclick="go('wallet')"><div class="act-icon g4">💰</div><div class="act-info"><div class="act-name">Earned 50 Coins</div><div class="act-time">1 hour ago</div></div><span style="color:var(--text2)">›</span></div>
-        <div class="act-item" onclick="go('shopping')"><div class="act-icon g3">🛒</div><div class="act-info"><div class="act-name">Order Placed</div><div class="act-time">Yesterday</div></div><span style="color:var(--text2)">›</span></div>
-      </div>
-    </div>
-  </div>
-  <div class="bnav">
-    <div class="ni active" onclick="navSwitch(this)"><div class="ni-icon">🏠</div><div class="ni-label">Home</div></div>
-    <div class="ni" onclick="navSwitch(this);go('social')"><div class="ni-icon">👥</div><div class="ni-label">Social</div></div>
-    <div class="nav-fab" onclick="go('aichat')">🤖</div>
-    <div class="ni" onclick="navSwitch(this);go('wallet')"><div class="ni-icon">💳</div><div class="ni-label">Wallet</div></div>
-    <div class="ni" onclick="navSwitch(this);go('profile')"><div class="ni-icon">👤</div><div class="ni-label">Profile</div></div>
-  </div>
-</div>
-
-<!-- ═══════════ AI TOOLS ═══════════ -->
-<div id="aitools" class="screen">
-  <div class="scroll-body">
-    <div class="page-header">
-      <div class="back-btn" onclick="go('home')">←</div>
-      <div class="page-title">🛠️ AI Tools</div>
-    </div>
-    <div class="tools-hero">
-      <div class="th-circle"></div>
-      <div class="th-emoji">✨</div>
-      <div class="th-title">Powered by Gemini AI</div>
-      <div class="th-sub">9 powerful tools — all free!</div>
-    </div>
-    <div class="section" style="margin-bottom:20px">
-      <div class="tools-grid">
-        <div class="tool-card tc1" onclick="go('aichat')"><div class="tc-icon">💬</div><div class="tc-name">AI Chatbot</div><div class="tc-desc">Ask anything, get smart answers</div><div class="tc-badge live">LIVE</div></div>
-        <div class="tool-card tc2" onclick="openTool('writer')"><div class="tc-icon">✍️</div><div class="tc-name">AI Writer</div><div class="tc-desc">Articles, blogs, essays</div><div class="tc-badge live">LIVE</div></div>
-        <div class="tool-card tc3" onclick="openTool('caption')"><div class="tc-icon">📱</div><div class="tc-name">Caption Writer</div><div class="tc-desc">Social media captions</div><div class="tc-badge live">LIVE</div></div>
-        <div class="tool-card tc4" onclick="openTool('resume')"><div class="tc-icon">📄</div><div class="tc-name">Resume Maker</div><div class="tc-desc">Professional resume builder</div><div class="tc-badge live">LIVE</div></div>
-        <div class="tool-card tc5" onclick="openTool('email')"><div class="tc-icon">📧</div><div class="tc-name">Email Writer</div><div class="tc-desc">Professional emails fast</div><div class="tc-badge live">LIVE</div></div>
-        <div class="tool-card tc6" onclick="openTool('prompt')"><div class="tc-icon">💡</div><div class="tc-name">Prompt Generator</div><div class="tc-desc">AI prompts for any tool</div><div class="tc-badge live">LIVE</div></div>
-        <div class="tool-card tc7" onclick="openTool('translate')"><div class="tc-icon">🌍</div><div class="tc-name">Translator</div><div class="tc-desc">Translate any language</div><div class="tc-badge live">LIVE</div></div>
-        <div class="tool-card tc8" onclick="openTool('logo')"><div class="tc-icon">🎨</div><div class="tc-name">Logo Ideas</div><div class="tc-desc">Logo concepts & ideas</div><div class="tc-badge live">LIVE</div></div>
-        <div class="tool-card tc9" onclick="openTool('story')"><div class="tc-icon">📖</div><div class="tc-name">Story Writer</div><div class="tc-desc">Creative stories & scripts</div><div class="tc-badge live">LIVE</div></div>
-      </div>
-    </div>
-  </div>
-  <div class="bnav">
-    <div class="ni" onclick="navSwitch(this);go('home')"><div class="ni-icon">🏠</div><div class="ni-label">Home</div></div>
-    <div class="ni" onclick="navSwitch(this);go('social')"><div class="ni-icon">👥</div><div class="ni-label">Social</div></div>
-    <div class="nav-fab" onclick="go('aichat')">🤖</div>
-    <div class="ni" onclick="navSwitch(this);go('wallet')"><div class="ni-icon">💳</div><div class="ni-label">Wallet</div></div>
-    <div class="ni" onclick="navSwitch(this);go('profile')"><div class="ni-icon">👤</div><div class="ni-label">Profile</div></div>
-  </div>
-</div>
-
-<!-- ═══════════ SOCIAL ═══════════ -->
-<div id="social" class="screen">
-  <div class="scroll-body">
-    <div class="page-header">
-      <div class="back-btn" onclick="go('home')">←</div>
-      <div class="page-title">👥 Social</div>
-      <div class="icon-btn">✉️</div>
-    </div>
-    <div class="section" style="padding-left:0;padding-right:0;margin-bottom:16px">
-      <div class="sec-head" style="padding:0 20px"><div class="sec-title">Stories</div><div class="see-all">Add Story +</div></div>
-      <div class="story-row">
-        <div class="story-item"><div class="story-ring add-story"><div class="story-avatar">➕</div></div><div class="story-name">Your Story</div></div>
-        <div class="story-item"><div class="story-ring"><div class="story-avatar">😎</div></div><div class="story-name">Rahul</div></div>
-        <div class="story-item"><div class="story-ring"><div class="story-avatar">👩</div></div><div class="story-name">Priya</div></div>
-        <div class="story-item"><div class="story-ring"><div class="story-avatar">🧑</div></div><div class="story-name">Amit</div></div>
-        <div class="story-item"><div class="story-ring"><div class="story-avatar">👧</div></div><div class="story-name">Sneha</div></div>
-        <div class="story-item"><div class="story-ring"><div class="story-avatar">👦</div></div><div class="story-name">Rohan</div></div>
-      </div>
-    </div>
-    <div class="section" style="padding:0;margin-bottom:8px">
-      <div class="sec-head" style="padding:0 20px 12px"><div class="sec-title">People You May Know</div></div>
-      <div class="friend-row">
-        <div class="friend-card"><div class="fc-avatar g1">👨‍💻</div><div class="fc-name">Dev Kumar</div><button class="fc-btn fc-add" onclick="addFriend(this)">+ Add</button></div>
-        <div class="friend-card"><div class="fc-avatar g2">👩‍🎨</div><div class="fc-name">Anita Shah</div><button class="fc-btn fc-add" onclick="addFriend(this)">+ Add</button></div>
-        <div class="friend-card"><div class="fc-avatar g3">👨‍🚀</div><div class="fc-name">Raj Patel</div><button class="fc-btn fc-add" onclick="addFriend(this)">+ Add</button></div>
-        <div class="friend-card"><div class="fc-avatar g5">👩‍💼</div><div class="fc-name">Meera Singh</div><button class="fc-btn fc-add" onclick="addFriend(this)">+ Add</button></div>
-      </div>
-    </div>
-
-    <div class="post-card" style="animation-delay:0.1s">
-      <div class="post-header">
-        <div class="post-avatar g1">😎</div>
-        <div><div class="post-user">Rahul Sharma</div><div class="post-time">2 min ago</div></div>
-        <button class="post-follow" onclick="toggleFollow(this)">+ Follow</button>
-      </div>
-      <div class="post-img post-img-bg1"><span>🤖</span></div>
-      <div class="post-text">Just tried Ashish AI Hub Pro — it's absolutely amazing! The AI chatbot is so smart 🔥</div>
-      <div class="post-actions">
-        <div class="pact" onclick="likePost(this)"><span class="pact-icon">🤍</span><span class="like-count">24</span></div>
-        <div class="pact" onclick="alert('Comment feature coming!')"><span class="pact-icon">💬</span><span>8</span></div>
-        <div class="pact" onclick="alert('Shared!')"><span class="pact-icon">📤</span><span>Share</span></div>
-      </div>
-    </div>
-
-    <div class="post-card" style="animation-delay:0.2s">
-      <div class="post-header">
-        <div class="post-avatar g2">👩</div>
-        <div><div class="post-user">Priya Mehta</div><div class="post-time">1 hr ago</div></div>
-        <button class="post-follow" onclick="toggleFollow(this)">+ Follow</button>
-      </div>
-      <div class="post-img post-img-bg2"><span>✨</span></div>
-      <div class="post-text">Earning coins daily by using AI tools! Check out the wallet section 💰</div>
-      <div class="post-actions">
-        <div class="pact" onclick="likePost(this)"><span class="pact-icon">🤍</span><span class="like-count">47</span></div>
-        <div class="pact" onclick="alert('Comment feature coming!')"><span class="pact-icon">💬</span><span>15</span></div>
-        <div class="pact" onclick="alert('Shared!')"><span class="pact-icon">📤</span><span>Share</span></div>
-      </div>
-    </div>
-
-    <div class="post-card" style="animation-delay:0.3s;margin-bottom:20px">
-      <div class="post-header">
-        <div class="post-avatar g4">🧑</div>
-        <div><div class="post-user">Amit Verma</div><div class="post-time">3 hr ago</div></div>
-        <button class="post-follow" onclick="toggleFollow(this)">+ Follow</button>
-      </div>
-      <div class="post-img post-img-bg3"><span>🛒</span></div>
-      <div class="post-text">Got 50% off on my order using the coupon code! Shopping section is 🔥</div>
-      <div class="post-actions">
-        <div class="pact" onclick="likePost(this)"><span class="pact-icon">🤍</span><span class="like-count">31</span></div>
-        <div class="pact" onclick="alert('Comment feature coming!')"><span class="pact-icon">💬</span><span>6</span></div>
-        <div class="pact" onclick="alert('Shared!')"><span class="pact-icon">📤</span><span>Share</span></div>
-      </div>
-    </div>
-  </div>
-  <div class="bnav">
-    <div class="ni" onclick="navSwitch(this);go('home')"><div class="ni-icon">🏠</div><div class="ni-label">Home</div></div>
-    <div class="ni active" onclick="navSwitch(this)"><div class="ni-icon">👥</div><div class="ni-label">Social</div></div>
-    <div class="nav-fab" onclick="go('aichat')">🤖</div>
-    <div class="ni" onclick="navSwitch(this);go('wallet')"><div class="ni-icon">💳</div><div class="ni-label">Wallet</div></div>
-    <div class="ni" onclick="navSwitch(this);go('profile')"><div class="ni-icon">👤</div><div class="ni-label">Profile</div></div>
-  </div>
-</div>
-
-<!-- ═══════════ SHOPPING ═══════════ -->
-<div id="shopping" class="screen">
-  <div id="cartBadge" class="cart-badge" style="display:none">0</div>
-  <div class="scroll-body">
-    <div class="page-header">
-      <div class="back-btn" onclick="go('home')">←</div>
-      <div class="page-title">🛒 Shopping</div>
-      <div class="icon-btn" onclick="showCart()">🛒</div>
-    </div>
-    <div class="offer-banner" onclick="alert('Coupon ASHISH50 copied! 🎉')">
-      <div><div class="ob-text">Flat 50% OFF</div><div class="ob-sub">Use code: ASHISH50</div></div>
-      <div class="ob-emoji">🎁</div>
-    </div>
-    <div class="section" style="margin-bottom:14px">
-      <div class="shop-cats">
-        <div class="cat-chip active" onclick="filterCat(this,'all')">All</div>
-        <div class="cat-chip" onclick="filterCat(this,'tech')">Tech</div>
-        <div class="cat-chip" onclick="filterCat(this,'fashion')">Fashion</div>
-        <div class="cat-chip" onclick="filterCat(this,'home')">Home</div>
-        <div class="cat-chip" onclick="filterCat(this,'beauty')">Beauty</div>
-      </div>
-    </div>
-    <div class="prod-grid">
-      <div class="prod-card"><div class="prod-img pi1"><span>📱</span><div class="wish-btn" onclick="wishlist(this)">🤍</div></div><div class="prod-info"><div class="prod-name">Smart Phone Pro</div><div><span class="prod-price">₹12,999</span><span class="prod-orig">₹24,999</span></div><div class="prod-rating">⭐⭐⭐⭐⭐ (128)</div><button class="prod-btn" onclick="addCart(this)">Add to Cart</button></div></div>
-      <div class="prod-card"><div class="prod-img pi2"><span>🎧</span><div class="wish-btn" onclick="wishlist(this)">🤍</div></div><div class="prod-info"><div class="prod-name">Wireless Earbuds</div><div><span class="prod-price">₹1,499</span><span class="prod-orig">₹3,999</span></div><div class="prod-rating">⭐⭐⭐⭐ (89)</div><button class="prod-btn" onclick="addCart(this)">Add to Cart</button></div></div>
-      <div class="prod-card"><div class="prod-img pi3"><span>👕</span><div class="wish-btn" onclick="wishlist(this)">🤍</div></div><div class="prod-info"><div class="prod-name">Premium T-Shirt</div><div><span class="prod-price">₹499</span><span class="prod-orig">₹999</span></div><div class="prod-rating">⭐⭐⭐⭐⭐ (234)</div><button class="prod-btn" onclick="addCart(this)">Add to Cart</button></div></div>
-      <div class="prod-card"><div class="prod-img pi4"><span>⌚</span><div class="wish-btn" onclick="wishlist(this)">🤍</div></div><div class="prod-info"><div class="prod-name">Smart Watch</div><div><span class="prod-price">₹2,999</span><span class="prod-orig">₹6,999</span></div><div class="prod-rating">⭐⭐⭐⭐ (67)</div><button class="prod-btn" onclick="addCart(this)">Add to Cart</button></div></div>
-      <div class="prod-card"><div class="prod-img pi5"><span>💄</span><div class="wish-btn" onclick="wishlist(this)">🤍</div></div><div class="prod-info"><div class="prod-name">Beauty Kit</div><div><span class="prod-price">₹799</span><span class="prod-orig">₹1,599</span></div><div class="prod-rating">⭐⭐⭐⭐⭐ (156)</div><button class="prod-btn" onclick="addCart(this)">Add to Cart</button></div></div>
-      <div class="prod-card"><div class="prod-img pi6"><span>🎮</span><div class="wish-btn" onclick="wishlist(this)">🤍</div></div><div class="prod-info"><div class="prod-name">Gaming Controller</div><div><span class="prod-price">₹1,299</span><span class="prod-orig">₹2,499</span></div><div class="prod-rating">⭐⭐⭐⭐ (43)</div><button class="prod-btn" onclick="addCart(this)">Add to Cart</button></div></div>
-    </div>
-    <div style="height:20px"></div>
-  </div>
-  <div class="bnav">
-    <div class="ni" onclick="navSwitch(this);go('home')"><div class="ni-icon">🏠</div><div class="ni-label">Home</div></div>
-    <div class="ni" onclick="navSwitch(this);go('social')"><div class="ni-icon">👥</div><div class="ni-label">Social</div></div>
-    <div class="nav-fab" onclick="go('aichat')">🤖</div>
-    <div class="ni active" onclick="navSwitch(this)"><div class="ni-icon">🛒</div><div class="ni-label">Shop</div></div>
-    <div class="ni" onclick="navSwitch(this);go('profile')"><div class="ni-icon">👤</div><div class="ni-label">Profile</div></div>
-  </div>
-</div>
-
-<!-- ═══════════ WALLET ═══════════ -->
-<div id="wallet" class="screen">
-  <div class="scroll-body">
-    <div class="page-header">
-      <div class="back-btn" onclick="go('home')">←</div>
-      <div class="page-title">💳 Wallet & Earn</div>
-    </div>
-    <div class="wallet-card">
-      <div class="wc-circle1"></div><div class="wc-circle2"></div>
-      <div class="wc-label">Total Balance</div>
-      <div class="wc-balance">₹250.00</div>
-      <div class="wc-coins">🪙 1,250 Coins earned</div>
-      <div class="wc-actions">
-        <button class="wc-btn" onclick="alert('Withdraw feature coming!')">💸 Withdraw</button>
-        <button class="wc-btn" onclick="alert('Transfer feature coming!')">🔄 Transfer</button>
-        <button class="wc-btn" onclick="alert('Add money feature coming!')">➕ Add</button>
-      </div>
-    </div>
-    <div class="coin-display"><span>🪙</span><b>1,250 Coins</b><span style="font-size:12px;color:var(--text2);margin-left:4px">= ₹125</span></div>
 
     <div class="section">
-      <div class="sec-head"><div class="sec-title">💰 Ways to Earn</div></div>
-      <div class="earn-grid">
-        <div class="earn-card" onclick="earnAction('Daily Login')"><div class="ec-icon">📅</div><div class="ec-title">Daily Login</div><div class="ec-desc">Login every day to earn coins</div><div class="ec-reward">🪙 +10 Daily</div></div>
-        <div class="earn-card" onclick="earnAction('Refer Friend')"><div class="ec-icon">👥</div><div class="ec-title">Refer & Earn</div><div class="ec-desc">Invite friends to app</div><div class="ec-reward">🪙 +100/Refer</div></div>
-        <div class="earn-card" onclick="earnAction('AI Tools')"><div class="ec-icon">🤖</div><div class="ec-title">Use AI Tools</div><div class="ec-desc">Use any AI tool daily</div><div class="ec-reward">🪙 +5 Each</div></div>
-        <div class="earn-card" onclick="earnAction('Watch Video Ad')"><div class="ec-icon">📺</div><div class="ec-title">Watch Ads</div><div class="ec-desc">Watch reward video ads</div><div class="ec-reward">🪙 +20 Each</div></div>
-        <div class="earn-card" onclick="earnAction('Shopping')"><div class="ec-icon">🛒</div><div class="ec-title">Shop & Earn</div><div class="ec-desc">Buy products to earn</div><div class="ec-reward">🪙 +50/Order</div></div>
-        <div class="earn-card" onclick="earnAction('Complete Profile')"><div class="ec-icon">👤</div><div class="ec-title">Complete Profile</div><div class="ec-desc">Fill your profile info</div><div class="ec-reward">🪙 +25 Once</div></div>
+      <div class="sec-head">
+        <div class="sec-title">Quick Actions</div>
+      </div>
+      <div class="qgrid">
+        <div class="qi" onclick="navTo('aichat')">
+          <div class="qi-icon">💬</div>
+          <div class="qi-label">Chat</div>
+        </div>
+        <div class="qi" onclick="navTo('aitools')">
+          <div class="qi-icon">🛠️</div>
+          <div class="qi-label">Tools</div>
+        </div>
+        <div class="qi" onclick="openTool('writer')">
+          <div class="qi-icon">✍️</div>
+          <div class="qi-label">Write</div>
+        </div>
+        <div class="qi" onclick="openTool('email')">
+          <div class="qi-icon">📧</div>
+          <div class="qi-label">Email</div>
+        </div>
+        <div class="qi" onclick="openTool('caption')">
+          <div class="qi-icon">📸</div>
+          <div class="qi-label">Caption</div>
+        </div>
+        <div class="qi" onclick="openTool('summary')">
+          <div class="qi-icon">📝</div>
+          <div class="qi-label">Summary</div>
+        </div>
+        <div class="qi" onclick="openTool('ideas')">
+          <div class="qi-icon">💡</div>
+          <div class="qi-label">Ideas</div>
+        </div>
+        <div class="qi" onclick="navTo('profile')">
+          <div class="qi-icon">👤</div>
+          <div class="qi-label">Profile</div>
+        </div>
       </div>
     </div>
 
-    <div class="section" style="margin-top:20px;margin-bottom:16px">
-      <div class="sec-head"><div class="sec-title">📊 Transactions</div></div>
-      <div class="txn-list">
-        <div class="txn-item"><div class="txn-icon g5">⬆️</div><div class="txn-info"><div class="txn-name">Daily Login Reward</div><div class="txn-date">Today, 9:00 AM</div></div><div class="txn-amt txn-pos">+🪙10</div></div>
-        <div class="txn-item"><div class="txn-icon g1">🤖</div><div class="txn-info"><div class="txn-name">AI Chat Used</div><div class="txn-date">Today, 8:45 AM</div></div><div class="txn-amt txn-pos">+🪙5</div></div>
-        <div class="txn-item"><div class="txn-icon g2">🛒</div><div class="txn-info"><div class="txn-name">Shopping Reward</div><div class="txn-date">Yesterday</div></div><div class="txn-amt txn-pos">+🪙50</div></div>
-        <div class="txn-item"><div class="txn-icon g7">💸</div><div class="txn-info"><div class="txn-name">Withdrawal</div><div class="txn-date">2 days ago</div></div><div class="txn-amt txn-neg">-₹100</div></div>
-        <div class="txn-item"><div class="txn-icon g4">👥</div><div class="txn-info"><div class="txn-name">Referral Bonus</div><div class="txn-date">3 days ago</div></div><div class="txn-amt txn-pos">+🪙100</div></div>
+    <div class="section">
+      <div class="sec-head">
+        <div class="sec-title">Popular Tools</div>
+        <div class="see-all" onclick="navTo('aitools')">See All</div>
+      </div>
+      <div class="tools-scroll">
+        <div class="tool-mini" onclick="openTool('writer')">
+          <div class="tm-icon">✍️</div>
+          <div class="tm-name">Content Writer</div>
+          <div class="tm-desc">Professional content</div>
+          <div class="tm-badge live">LIVE</div>
+        </div>
+        <div class="tool-mini" onclick="openTool('email')">
+          <div class="tm-icon">📧</div>
+          <div class="tm-name">Email Pro</div>
+          <div class="tm-desc">Perfect emails</div>
+          <div class="tm-badge live">LIVE</div>
+        </div>
+        <div class="tool-mini" onclick="openTool('caption')">
+          <div class="tm-icon">📸</div>
+          <div class="tm-name">Caption Maker</div>
+          <div class="tm-desc">Catchy captions</div>
+          <div class="tm-badge live">LIVE</div>
+        </div>
       </div>
     </div>
-  </div>
-  <div class="bnav">
-    <div class="ni" onclick="navSwitch(this);go('home')"><div class="ni-icon">🏠</div><div class="ni-label">Home</div></div>
-    <div class="ni" onclick="navSwitch(this);go('social')"><div class="ni-icon">👥</div><div class="ni-label">Social</div></div>
-    <div class="nav-fab" onclick="go('aichat')">🤖</div>
-    <div class="ni active" onclick="navSwitch(this)"><div class="ni-icon">💳</div><div class="ni-label">Wallet</div></div>
-    <div class="ni" onclick="navSwitch(this);go('profile')"><div class="ni-icon">👤</div><div class="ni-label">Profile</div></div>
+
+    <div class="section">
+      <div class="sec-head">
+        <div class="sec-title">Recent Activity</div>
+      </div>
+      <div class="act-list">
+        <div class="act-item" onclick="navTo('aichat')">
+          <div class="act-icon">💬</div>
+          <div class="act-info">
+            <div class="act-name">AI Chat Conversation</div>
+            <div class="act-time">2 hours ago</div>
+          </div>
+        </div>
+        <div class="act-item" onclick="openTool('writer')">
+          <div class="act-icon">✍️</div>
+          <div class="act-info">
+            <div class="act-name">Content Generated</div>
+            <div class="act-time">Yesterday</div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 
-<!-- ═══════════ PROFILE ═══════════ -->
-<div id="profile" class="screen">
+<!-- ══════════════════════════════
+     AI TOOLS SCREEN
+══════════════════════════════ -->
+<div id="aitools" class="screen">
+  <div class="page-header">
+    <div class="back-btn" onclick="navTo('home')">←</div>
+    <div class="page-title">AI Tools</div>
+  </div>
+
   <div class="scroll-body">
-    <div class="profile-hero">
-      <div class="ph-circle1"></div><div class="ph-circle2"></div>
-      <div class="profile-avatar-wrap">
-        <div class="profile-avatar">😊</div>
-        <div class="edit-avatar">✏️</div>
+    <div class="tools-hero">
+      <div class="th-title">Powerful AI Tools</div>
+      <div class="th-sub">Transform your work with AI</div>
+      <div class="th-emoji">🛠️</div>
+    </div>
+
+    <div class="section">
+      <div class="tools-grid">
+        <div class="tool-card" onclick="openTool('writer')">
+          <div class="tool-icon">✍️</div>
+          <div class="tool-name">Content Writer</div>
+          <div class="tool-desc">Professional articles and blogs</div>
+        </div>
+        <div class="tool-card" onclick="openTool('email')">
+          <div class="tool-icon">📧</div>
+          <div class="tool-name">Email Pro</div>
+          <div class="tool-desc">Perfect professional emails</div>
+        </div>
+        <div class="tool-card" onclick="openTool('caption')">
+          <div class="tool-icon">📸</div>
+          <div class="tool-name">Caption Maker</div>
+          <div class="tool-desc">Catchy social captions</div>
+        </div>
+        <div class="tool-card" onclick="openTool('summary')">
+          <div class="tool-icon">📝</div>
+          <div class="tool-name">Smart Summary</div>
+          <div class="tool-desc">Quick text summaries</div>
+        </div>
+        <div class="tool-card" onclick="openTool('translator')">
+          <div class="tool-icon">🌐</div>
+          <div class="tool-name">Translator</div>
+          <div class="tool-desc">Multi-language translation</div>
+        </div>
+        <div class="tool-card" onclick="openTool('ideas')">
+          <div class="tool-icon">💡</div>
+          <div class="tool-name">Idea Generator</div>
+          <div class="tool-desc">Creative brainstorming</div>
+        </div>
+        <div class="tool-card" onclick="openTool('script')">
+          <div class="tool-icon">🎬</div>
+          <div class="tool-name">Script Writer</div>
+          <div class="tool-desc">Video scripts & stories</div>
+        </div>
+        <div class="tool-card" onclick="openTool('fixer')">
+          <div class="tool-icon">🔧</div>
+          <div class="tool-name">Grammar Fixer</div>
+          <div class="tool-desc">Fix grammar & spelling</div>
+        </div>
       </div>
-      <div class="profile-name" id="pname">Ashish Kumar</div>
-      <div class="profile-email">ashish@email.com</div>
-      <div class="profile-badges">
-        <div class="pbadge">⭐ Pro User</div>
-        <div class="pbadge">🏆 Top Creator</div>
-      </div>
     </div>
-    <div class="profile-stats">
-      <div class="ps-item"><div class="ps-val">47</div><div class="ps-key">Posts</div></div>
-      <div class="ps-item" style="border-left:1px solid rgba(255,255,255,0.06);border-right:1px solid rgba(255,255,255,0.06)"><div class="ps-val">1.2K</div><div class="ps-key">Followers</div></div>
-      <div class="ps-item"><div class="ps-val">389</div><div class="ps-key">Following</div></div>
-    </div>
-    <div class="menu-list">
-      <div class="menu-item" onclick="alert('Edit Profile coming!')"><div class="mi-icon g1">👤</div><div class="mi-info"><div class="mi-title">Edit Profile</div><div class="mi-sub">Update your info</div></div><div class="mi-arrow">›</div></div>
-      <div class="menu-item" onclick="alert('Premium Plan coming in Phase 3!')"><div class="mi-icon g4">⭐</div><div class="mi-info"><div class="mi-title">Premium Plan</div><div class="mi-sub">Upgrade for more features</div></div><div class="mi-badge badge-pro">PRO</div></div>
-      <div class="menu-item" onclick="go('wallet')"><div class="mi-icon g5">💳</div><div class="mi-info"><div class="mi-title">Wallet & Earnings</div><div class="mi-sub">₹250 balance</div></div><div class="mi-arrow">›</div></div>
-      <div class="menu-item" onclick="alert('Notifications settings coming!')"><div class="mi-icon g3">🔔</div><div class="mi-info"><div class="mi-title">Notifications</div><div class="mi-sub">Manage alerts</div></div><div class="mi-badge badge-new">NEW</div></div>
-      <div class="menu-item" onclick="toggleTheme()"><div class="mi-icon g6">🌙</div><div class="mi-info"><div class="mi-title">Dark / Light Mode</div><div class="mi-sub">Switch theme</div></div><div class="mi-arrow">›</div></div>
-      <div class="menu-item" onclick="alert('Privacy settings coming!')"><div class="mi-icon g7">🔒</div><div class="mi-info"><div class="mi-title">Privacy & Security</div><div class="mi-sub">Manage your data</div></div><div class="mi-arrow">›</div></div>
-      <div class="menu-item" onclick="alert('Help & Support coming!')"><div class="mi-icon g2">💬</div><div class="mi-info"><div class="mi-title">Help & Support</div><div class="mi-sub">Contact us</div></div><div class="mi-arrow">›</div></div>
-      <div class="menu-item" onclick="alert('About: Ashish AI Hub Pro v2.0\nMade with ❤️')"><div class="mi-icon g8">ℹ️</div><div class="mi-info"><div class="mi-title">About App</div><div class="mi-sub">Version 2.0 • Phase 2</div></div><div class="mi-arrow">›</div></div>
-    </div>
-    <button class="logout-btn" onclick="go('home')">🚪 Logout</button>
-  </div>
-  <div class="bnav">
-    <div class="ni" onclick="navSwitch(this);go('home')"><div class="ni-icon">🏠</div><div class="ni-label">Home</div></div>
-    <div class="ni" onclick="navSwitch(this);go('social')"><div class="ni-icon">👥</div><div class="ni-label">Social</div></div>
-    <div class="nav-fab" onclick="go('aichat')">🤖</div>
-    <div class="ni" onclick="navSwitch(this);go('wallet')"><div class="ni-icon">💳</div><div class="ni-label">Wallet</div></div>
-    <div class="ni active" onclick="navSwitch(this)"><div class="ni-icon">👤</div><div class="ni-label">Profile</div></div>
   </div>
 </div>
 
-<!-- ═══════════ AI CHAT ═══════════ -->
+<!-- ══════════════════════════════
+     AI CHAT SCREEN
+══════════════════════════════ -->
 <div id="aichat" class="screen">
-  <div class="chat-hdr">
-    <div class="back-btn" onclick="go('home')" style="margin:0">←</div>
-    <div class="chat-av">🤖</div>
-    <div class="chat-info">
-      <div class="chat-name">Ashish AI</div>
-      <div class="chat-status"><div class="sdot"></div>Powered by Gemini</div>
-    </div>
-    <div class="icon-btn" onclick="showKeyModal()">⚙️</div>
+  <div class="chat-header">
+    <div class="chat-title">AI Assistant</div>
+    <div class="chat-status">🟢 Online</div>
   </div>
-  <div class="quick-prompts">
-    <div class="qp" onclick="quickPrompt('Write a poem for me 🎵')">Write a poem</div>
-    <div class="qp" onclick="quickPrompt('Tell me a joke 😄')">Tell a joke</div>
-    <div class="qp" onclick="quickPrompt('Give me a motivational quote 💪')">Motivation</div>
-    <div class="qp" onclick="quickPrompt('What can you do? 🤖')">What can you do?</div>
-    <div class="qp" onclick="quickPrompt('Help me write a bio for Instagram 📸')">Instagram bio</div>
-  </div>
-  <div id="apiNotice" class="api-notice" style="display:none">⚠️ Gemini API key chahiye! ⚙️ dabao aur key add karo — <b>aistudio.google.com</b> pe free milegi</div>
-  <div class="msgs" id="msgs">
-    <div class="msg">
-      <div class="msg-av">🤖</div>
-      <div><div class="bubble">Namaste! 🙏 Main Ashish AI hoon — Phase 2 mein aagaya hoon!<br><br>Ab main aur bhi zyada smart hoon. Kuch bhi poocho! ✨</div><div class="msg-t">Just now</div></div>
-    </div>
-  </div>
-  <div class="chat-inp-area">
-    <div class="chat-inp-wrap">
-      <input type="text" id="chatIn" placeholder="Type a message..." onkeydown="if(event.key==='Enter')sendMsg()">
-    </div>
-    <button class="send-btn" id="sendBtn" onclick="sendMsg()">➤</button>
-  </div>
-</div>
 
-<!-- AI TOOL MODAL -->
-<div id="toolModal" style="display:none">
-  <div class="ai-modal" onclick="closeToolModal(event)">
-    <div class="ai-modal-box">
-      <div class="modal-handle"></div>
-      <div class="modal-title" id="toolTitle">✍️ AI Writer</div>
-      <div class="modal-sub" id="toolSub">Describe what you want to write</div>
-      <div id="toolChips" class="chip-row"></div>
-      <textarea class="modal-textarea" id="toolInput" rows="4" placeholder="Type here..."></textarea>
-      <div id="toolResult" class="modal-result" style="display:none"></div>
-      <button class="btn-primary" id="toolBtn" onclick="runTool()">✨ Generate with AI</button>
-      <button class="btn-outline" style="margin-top:10px" onclick="document.getElementById('toolModal').style.display='none'">Close</button>
+  <div class="chat-body" id="chatBody">
+    <div id="apiNotice" class="api-notice">
+      <div class="api-notice-icon">⚠️</div>
+      <div class="api-notice-text">API key add karo to start chatting</div>
+      <button class="api-notice-btn" onclick="showKeyModal()">Add Key</button>
+    </div>
+
+    <div id="emptyChat" class="empty-chat">
+      <div class="ec-icon">🤖</div>
+      <div class="ec-title">Hello! Main Ashish AI hoon</div>
+      <div class="ec-desc">Mujhse kuch bhi poocho, main help karunga</div>
+      <div class="quick-prompts">
+        <div class="qp-btn" onclick="quickPrompt('Mujhe ek blog post likhna hai AI par')">📝 Blog post likho</div>
+        <div class="qp-btn" onclick="quickPrompt('Mujhe email likhna hai boss ko')">📧 Professional email</div>
+        <div class="qp-btn" onclick="quickPrompt('Instagram caption chahiye')">📸 Instagram caption</div>
+        <div class="qp-btn" onclick="quickPrompt('Ek kahani sunao')">📖 Kahani sunao</div>
+      </div>
+    </div>
+
+    <div id="msgs" class="msgs"></div>
+  </div>
+
+  <div class="chat-input">
+    <div class="input-wrap">
+      <input type="text" id="chatIn" placeholder="Type karein..." onkeypress="if(event.key==='Enter')sendMsg()">
+      <button class="send-btn" id="sendBtn" onclick="sendMsg()">➤</button>
     </div>
   </div>
 </div>
 
-<!-- API KEY MODAL -->
-<div id="keyModal" style="display:none">
-  <div class="key-modal" onclick="closeKeyModalOutside(event)">
-    <div class="key-box">
-      <div class="modal-handle"></div>
-      <div class="modal-title">🔑 Gemini API Key</div>
-      <div class="modal-sub" style="color:var(--text2);font-size:12px;margin-bottom:16px">Key sirf aapke device pe save hoti hai — koi server pe nahi!</div>
-      <input class="key-input" type="password" id="keyIn" placeholder="Paste Gemini API key here...">
-      <a style="color:var(--primary);font-size:12px;display:block;margin-bottom:16px" href="https://aistudio.google.com" target="_blank">👉 Free key lene ke liye: aistudio.google.com</a>
-      <button class="btn-primary" onclick="saveKey()">Save & Connect →</button>
-      <button class="btn-outline" style="margin-top:10px" onclick="document.getElementById('keyModal').style.display='none'">Cancel</button>
+<!-- ══════════════════════════════
+     PHASE 4: PROFILE SCREEN
+══════════════════════════════ -->
+<div id="profile" class="screen">
+  <div class="profile-header">
+    <div class="profile-avatar">👤</div>
+    <div class="profile-name">Ashish</div>
+    <div class="profile-email">ashish@example.com</div>
+  </div>
+
+  <div class="scroll-body">
+    <div class="section">
+      <div class="stats-row">
+        <div class="stat-box">
+          <div class="stat-value">24</div>
+          <div class="stat-label">Tools Used</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-value">156</div>
+          <div class="stat-label">Chats</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-value">7</div>
+          <div class="stat-label">Days Active</div>
+        </div>
+      </div>
     </div>
+
+    <div class="menu-list">
+      <div class="menu-group">
+        <div class="menu-item" onclick="showKeyModal()">
+          <div class="menu-icon">🔑</div>
+          <div class="menu-info">
+            <div class="menu-title">API Key</div>
+            <div class="menu-desc">Manage your Gemini API key</div>
+          </div>
+          <div class="menu-arrow">›</div>
+        </div>
+
+        <div class="menu-item" onclick="alert('History feature coming soon!')">
+          <div class="menu-icon">🕐</div>
+          <div class="menu-info">
+            <div class="menu-title">Chat History</div>
+            <div class="menu-desc">View past conversations</div>
+          </div>
+          <div class="menu-arrow">›</div>
+        </div>
+
+        <div class="menu-item" onclick="alert('Favorites feature coming soon!')">
+          <div class="menu-icon">⭐</div>
+          <div class="menu-info">
+            <div class="menu-title">Favorites</div>
+            <div class="menu-desc">Saved responses & prompts</div>
+          </div>
+          <div class="menu-arrow">›</div>
+        </div>
+      </div>
+
+      <div class="menu-group">
+        <div class="menu-item" onclick="alert('Settings coming soon!')">
+          <div class="menu-icon">⚙️</div>
+          <div class="menu-info">
+            <div class="menu-title">Settings</div>
+            <div class="menu-desc">App preferences</div>
+          </div>
+          <div class="menu-arrow">›</div>
+        </div>
+
+        <div class="menu-item" onclick="alert('Notifications: Enabled')">
+          <div class="menu-icon">🔔</div>
+          <div class="menu-info">
+            <div class="menu-title">Notifications</div>
+            <div class="menu-desc">Manage alerts</div>
+          </div>
+          <div class="menu-badge">ON</div>
+        </div>
+
+        <div class="menu-item" onclick="alert('Language: English/Hindi')">
+          <div class="menu-icon">🌐</div>
+          <div class="menu-info">
+            <div class="menu-title">Language</div>
+            <div class="menu-desc">Hinglish (Default)</div>
+          </div>
+          <div class="menu-arrow">›</div>
+        </div>
+      </div>
+
+      <div class="menu-group">
+        <div class="menu-item" onclick="alert('Help & Support')">
+          <div class="menu-icon">❓</div>
+          <div class="menu-info">
+            <div class="menu-title">Help & Support</div>
+            <div class="menu-desc">Get assistance</div>
+          </div>
+          <div class="menu-arrow">›</div>
+        </div>
+
+        <div class="menu-item" onclick="alert('Ashish AI Hub Pro v1.0')">
+          <div class="menu-icon">ℹ️</div>
+          <div class="menu-info">
+            <div class="menu-title">About</div>
+            <div class="menu-desc">Version 1.0</div>
+          </div>
+          <div class="menu-arrow">›</div>
+        </div>
+
+        <div class="menu-item" onclick="shareApp()">
+          <div class="menu-icon">📤</div>
+          <div class="menu-info">
+            <div class="menu-title">Share App</div>
+            <div class="menu-desc">Invite friends</div>
+          </div>
+          <div class="menu-arrow">›</div>
+        </div>
+      </div>
+    </div>
+
+    <button class="logout-btn" onclick="logout()">
+      🚪 Logout
+    </button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════
+     BOTTOM NAVIGATION
+══════════════════════════════ -->
+<div class="bnav">
+  <div class="ni active" data-nav="home" onclick="navTo('home')">
+    <div class="ni-icon">🏠</div>
+    <div class="ni-label">Home</div>
+  </div>
+  <div class="ni" data-nav="aitools" onclick="navTo('aitools')">
+    <div class="ni-icon">🛠️</div>
+    <div class="ni-label">Tools</div>
+  </div>
+  <div class="nav-fab" onclick="navTo('aichat')">💬</div>
+  <div class="ni" data-nav="aichat" onclick="navTo('aichat')">
+    <div class="ni-icon">🤖</div>
+    <div class="ni-label">Chat</div>
+  </div>
+  <div class="ni" data-nav="profile" onclick="navTo('profile')">
+    <div class="ni-icon">👤</div>
+    <div class="ni-label">Profile</div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════
+     TOOL MODAL
+══════════════════════════════ -->
+<div id="toolModal" class="ai-modal" onclick="closeToolModal(event)">
+  <div class="modal-content">
+    <div class="modal-header">
+      <div class="modal-title" id="toolTitle">AI Tool</div>
+      <button class="modal-close" onclick="document.getElementById('toolModal').style.display='none'">✕</button>
+    </div>
+    <div class="modal-sub" id="toolSub">Tool description</div>
+    <div class="tool-chips" id="toolChips"></div>
+    <textarea class="tool-input" id="toolInput" placeholder="Enter your text..."></textarea>
+    <button class="btn-primary" id="toolBtn" onclick="runTool()">✨ Generate with AI</button>
+    <div class="tool-result" id="toolResult"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════
+     API KEY MODAL
+══════════════════════════════ -->
+<div id="keyModal" class="key-modal" onclick="closeKeyModalOutside(event)">
+  <div class="modal-content">
+    <div class="modal-header">
+      <div class="modal-title">Gemini API Key</div>
+      <button class="modal-close" onclick="document.getElementById('keyModal').style.display='none'">✕</button>
+    </div>
+    <div class="key-help">
+      <div class="key-help-title">🔑 How to get API Key?</div>
+      <div class="key-help-text">
+        1. Visit <a href="https://makersuite.google.com/app/apikey" target="_blank">Google AI Studio</a><br>
+        2. Create new API key<br>
+        3. Copy and paste below
+      </div>
+    </div>
+    <input type="text" class="key-input" id="keyIn" placeholder="AIzaSy...">
+    <button class="btn-primary" onclick="saveKey()">💾 Save Key</button>
   </div>
 </div>
 
 <script>
-// ── STATE ──
-let isDark = true;
+// ── GLOBAL STATE ──
 let geminiKey = localStorage.getItem('g_key') || '';
-let chatHistory = [];
-let cartCount = 0;
-let bannerIdx = 0;
 let currentTool = '';
 let toolChipSelected = '';
+let chatHistory = [];
+let currentBanner = 0;
 
-// ── NAV ──
-function go(id) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-  if (id === 'aichat') {
-    document.getElementById('apiNotice').style.display = geminiKey ? 'none' : 'block';
-  }
-}
-function navSwitch(el) {
-  el.closest('.bnav').querySelectorAll('.ni').forEach(n => n.classList.remove('active'));
-  el.classList.add('active');
-}
-
-// ── THEME ──
-function toggleTheme() {
-  isDark = !isDark;
-  document.body.classList.toggle('light', !isDark);
-  document.getElementById('themeBtn').textContent = isDark ? '🌙' : '☀️';
-}
-
-// ── BANNER ──
-setInterval(() => {
-  const track = document.getElementById('bt');
-  if (!track) return;
-  const cards = track.children;
-  bannerIdx = (bannerIdx + 1) % cards.length;
-  track.style.transform = `translateX(-${bannerIdx * (cards[0].offsetWidth + 12)}px)`;
-  document.querySelectorAll('.bdot').forEach((d,i) => d.classList.toggle('active', i === bannerIdx));
-}, 3500);
-
-// ── SOCIAL ──
-function toggleFollow(btn) {
-  const following = btn.classList.toggle('following');
-  btn.textContent = following ? '✓ Following' : '+ Follow';
-}
-function likePost(el) {
-  const liked = el.classList.toggle('liked');
-  const icon = el.querySelector('.pact-icon');
-  const count = el.querySelector('.like-count');
-  icon.textContent = liked ? '❤️' : '🤍';
-  count.textContent = parseInt(count.textContent) + (liked ? 1 : -1);
-}
-function addFriend(btn) {
-  btn.textContent = '✓ Added';
-  btn.classList.remove('fc-add');
-  btn.classList.add('fc-added');
-}
-
-// ── SHOPPING ──
-function addCart(btn) {
-  cartCount++;
-  btn.textContent = '✓ Added!';
-  btn.style.background = 'var(--green)';
-  const badge = document.getElementById('cartBadge');
-  badge.style.display = 'flex';
-  badge.textContent = cartCount;
-  setTimeout(() => { btn.textContent = 'Add to Cart'; btn.style.background = ''; }, 2000);
-}
-function wishlist(btn) {
-  const wished = btn.textContent === '❤️';
-  btn.textContent = wished ? '🤍' : '❤️';
-}
-function filterCat(el) {
-  document.querySelectorAll('.cat-chip').forEach(c => c.classList.remove('active'));
-  el.classList.add('active');
-}
-function showCart() {
-  alert(cartCount > 0 ? `🛒 ${cartCount} items in cart!\nCheckout coming in Phase 3!` : '🛒 Cart is empty!');
-}
-
-// ── WALLET ──
-function earnAction(name) {
-  alert(`🎉 ${name} reward claimed!\n+Coins added to your wallet!`);
-}
-
-// ── AI TOOLS ──
+// ── TOOL CONFIGURATIONS ──
 const toolConfigs = {
-  writer: { title:'✍️ AI Writer', sub:'Topic ya idea likho — AI article/blog likhega', placeholder:'Topic: Benefits of meditation...', chips:['Blog Post','Article','Essay','Product Description'] },
-  caption: { title:'📱 Caption Writer', sub:'Post ke baare mein batao — AI caption dega', placeholder:'Post about: My new phone unboxing...', chips:['Instagram','Twitter/X','Facebook','LinkedIn'] },
-  resume: { title:'📄 Resume Maker', sub:'Apni details likho — AI resume banayega', placeholder:'Name, skills, experience: Software developer, 2 years exp, Python, React...', chips:['Fresher','Experienced','Creative','Tech'] },
-  email: { title:'📧 Email Writer', sub:'Email ka purpose batao', placeholder:'Write a professional email to apply for a job at Google...', chips:['Job Application','Follow Up','Thank You','Complaint'] },
-  prompt: { title:'💡 Prompt Generator', sub:'Kis cheez ke liye prompt chahiye?', placeholder:'Generate a prompt for: creating a logo for a food business...', chips:['Image AI','ChatGPT','Marketing','Code'] },
-  translate: { title:'🌍 Translator', sub:'Text aur language batao', placeholder:'Translate to Hindi: The weather is very nice today...', chips:['Hindi','English','Marathi','Spanish'] },
-  logo: { title:'🎨 Logo Ideas', sub:'Brand ke baare mein batao', placeholder:'Brand name: TechNova, it is a tech startup...', chips:['Tech','Food','Fashion','Education'] },
-  story: { title:'📖 Story Writer', sub:'Story ka idea batao', placeholder:'Write a short story about: a robot who learns to feel emotions...', chips:['Fantasy','Romance','Horror','Adventure'] },
+  writer: {
+    title: '✍️ Content Writer',
+    sub: 'Professional articles, blogs, and content',
+    placeholder: 'Topic batao... (e.g., "AI ka future")',
+    chips: ['Blog Post', 'Article', 'Story', 'Tutorial']
+  },
+  email: {
+    title: '📧 Email Pro',
+    sub: 'Perfect professional emails',
+    placeholder: 'Email purpose batao... (e.g., "leave request")',
+    chips: ['Formal', 'Casual', 'Request', 'Thank You']
+  },
+  caption: {
+    title: '📸 Caption Maker',
+    sub: 'Catchy social media captions',
+    placeholder: 'Photo ka context... (e.g., "sunset beach")',
+    chips: ['Instagram', 'Facebook', 'Funny', 'Motivational']
+  },
+  summary: {
+    title: '📝 Smart Summary',
+    sub: 'Quick text summaries',
+    placeholder: 'Long text paste karo...',
+    chips: ['Brief', 'Detailed', 'Bullet Points', 'Key Points']
+  },
+  translator: {
+    title: '🌐 Translator',
+    sub: 'Multi-language translation',
+    placeholder: 'Text aur target language...',
+    chips: ['Hindi', 'English', 'Spanish', 'French']
+  },
+  ideas: {
+    title: '💡 Idea Generator',
+    sub: 'Creative brainstorming',
+    placeholder: 'Topic batao... (e.g., "YouTube channel")',
+    chips: ['Business', 'Content', 'Product', 'Campaign']
+  },
+  script: {
+    title: '🎬 Script Writer',
+    sub: 'Video scripts & stories',
+    placeholder: 'Video topic... (e.g., "tech review")',
+    chips: ['YouTube', 'Short', 'Tutorial', 'Vlog']
+  },
+  fixer: {
+    title: '🔧 Grammar Fixer',
+    sub: 'Fix grammar & spelling',
+    placeholder: 'Text paste karo...',
+    chips: ['Fix All', 'Improve', 'Formal', 'Casual']
+  }
 };
 
+// ── NAVIGATION ──
+function navTo(screen) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(screen).classList.add('active');
+  document.querySelectorAll('.ni').forEach(n => n.classList.remove('active'));
+  const nav = document.querySelector(`.ni[data-nav="${screen}"]`);
+  if (nav) nav.classList.add('active');
+}
+
+// ── BANNER AUTO SLIDE ──
+function rotateBanner() {
+  currentBanner = (currentBanner + 1) % 3;
+  document.getElementById('bannerTrack').style.transform = `translateX(-${currentBanner * (100 / 3)}%)`;
+  document.querySelectorAll('.bdot').forEach((d, i) => {
+    d.classList.toggle('active', i === currentBanner);
+  });
+}
+setInterval(rotateBanner, 4000);
+
+// ── TOOL MODAL ──
 function openTool(tool) {
   currentTool = tool;
   toolChipSelected = '';
@@ -851,7 +1767,7 @@ function openTool(tool) {
   document.getElementById('toolBtn').textContent = '✨ Generate with AI';
   const chips = document.getElementById('toolChips');
   chips.innerHTML = cfg.chips.map(c => `<div class="chip" onclick="selectChip(this,'${c}')">${c}</div>`).join('');
-  document.getElementById('toolModal').style.display = 'block';
+  document.getElementById('toolModal').style.display = 'flex';
 }
 
 function selectChip(el, val) {
@@ -861,13 +1777,21 @@ function selectChip(el, val) {
 }
 
 function closeToolModal(e) {
-  if (e.target.classList.contains('ai-modal')) document.getElementById('toolModal').style.display = 'none';
+  if (e.target.classList.contains('ai-modal')) {
+    document.getElementById('toolModal').style.display = 'none';
+  }
 }
 
 async function runTool() {
   const input = document.getElementById('toolInput').value.trim();
-  if (!input) { alert('Pehle kuch likho!'); return; }
-  if (!geminiKey) { alert('Pehle API key add karo! ⚙️ button dabao.'); return; }
+  if (!input) {
+    alert('Pehle kuch likho!');
+    return;
+  }
+  if (!geminiKey) {
+    alert('Pehle API key add karo! Profile mein jao.');
+    return;
+  }
 
   const btn = document.getElementById('toolBtn');
   btn.textContent = '⏳ Generating...';
@@ -875,7 +1799,7 @@ async function runTool() {
 
   const cfg = toolConfigs[currentTool];
   const styleHint = toolChipSelected ? ` Style: ${toolChipSelected}.` : '';
-  const prompt = `You are a helpful AI assistant for Ashish AI Hub Pro app. Task: ${cfg.title.replace(/[^a-zA-Z ]/g,'')}. User input: "${input}".${styleHint} Respond in Hinglish (Hindi + English mix). Be creative, engaging, and practical. Keep response concise and well-formatted.`;
+  const prompt = `You are a helpful AI assistant. Task: ${cfg.title.replace(/[^a-zA-Z ]/g, '')}. User input: "${input}".${styleHint} Respond in Hinglish (Hindi + English mix). Be creative and practical.`;
 
   const result = document.getElementById('toolResult');
   result.style.display = 'block';
@@ -883,19 +1807,20 @@ async function runTool() {
 
   try {
     const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${geminiKey}`, {
-      method: 'POST', headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({ contents: [{ role:'user', parts:[{text:prompt}] }] })
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ contents: [{ role: 'user', parts: [{ text: prompt }] }] })
     });
     const data = await res.json();
     if (data.candidates?.[0]?.content?.parts?.[0]?.text) {
-      result.innerHTML = data.candidates[0].content.parts[0].text.replace(/\n/g,'<br>');
+      result.innerHTML = data.candidates[0].content.parts[0].text.replace(/\n/g, '<br>');
       btn.textContent = '🔄 Regenerate';
     } else {
-      result.innerHTML = '❌ Error aaya. API key check karo ya dobara try karo.';
+      result.innerHTML = '❌ Error aaya. API key check karo.';
       btn.textContent = '✨ Try Again';
     }
-  } catch(e) {
-    result.innerHTML = '❌ Network error. Internet check karo!';
+  } catch (e) {
+    result.innerHTML = '❌ Network error!';
     btn.textContent = '✨ Try Again';
   }
   btn.disabled = false;
@@ -904,45 +1829,80 @@ async function runTool() {
 // ── AI CHAT ──
 function quickPrompt(text) {
   document.getElementById('chatIn').value = text;
+  document.getElementById('emptyChat').style.display = 'none';
   sendMsg();
 }
+
 function addMsg(type, text) {
+  document.getElementById('emptyChat').style.display = 'none';
   const area = document.getElementById('msgs');
-  const t = new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
+  const t = new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
   const div = document.createElement('div');
-  div.className = `msg ${type==='user'?'user':''}`;
-  div.innerHTML = `<div class="msg-av">${type==='user'?'😊':'🤖'}</div><div><div class="bubble">${text}</div><div class="msg-t">${t}</div></div>`;
+  div.className = `msg ${type === 'user' ? 'user' : ''}`;
+  div.innerHTML = `
+    <div class="msg-av">${type === 'user' ? '😊' : '🤖'}</div>
+    <div>
+      <div class="bubble">${text}</div>
+      <div class="msg-t">${t}</div>
+    </div>
+  `;
   area.appendChild(div);
-  area.scrollTop = area.scrollHeight;
+  document.getElementById('chatBody').scrollTop = document.getElementById('chatBody').scrollHeight;
 }
+
 function showTyping() {
   const area = document.getElementById('msgs');
   const div = document.createElement('div');
-  div.className = 'msg'; div.id = 'typing';
-  div.innerHTML = `<div class="msg-av">🤖</div><div><div class="bubble"><div class="typing"><div class="td"></div><div class="td"></div><div class="td"></div></div></div></div>`;
-  area.appendChild(div); area.scrollTop = area.scrollHeight;
+  div.className = 'msg';
+  div.id = 'typing';
+  div.innerHTML = `
+    <div class="msg-av">🤖</div>
+    <div>
+      <div class="bubble">
+        <div class="typing">
+          <div class="td"></div>
+          <div class="td"></div>
+          <div class="td"></div>
+        </div>
+      </div>
+    </div>
+  `;
+  area.appendChild(div);
+  document.getElementById('chatBody').scrollTop = document.getElementById('chatBody').scrollHeight;
 }
-function removeTyping() { const t=document.getElementById('typing'); if(t)t.remove(); }
+
+function removeTyping() {
+  const t = document.getElementById('typing');
+  if (t) t.remove();
+}
 
 async function sendMsg() {
   const input = document.getElementById('chatIn');
   const text = input.value.trim();
   if (!text) return;
+
   addMsg('user', text);
-  chatHistory.push({role:'user', parts:[{text}]});
+  chatHistory.push({ role: 'user', parts: [{ text }] });
   input.value = '';
   document.getElementById('sendBtn').disabled = true;
+
   if (!geminiKey) {
     showTyping();
-    setTimeout(()=>{ removeTyping(); addMsg('bot','⚠️ API key add karo! Upar ⚙️ button dabao.'); document.getElementById('sendBtn').disabled=false; },800);
+    setTimeout(() => {
+      removeTyping();
+      addMsg('bot', '⚠️ API key add karo! Profile mein jao.');
+      document.getElementById('sendBtn').disabled = false;
+    }, 800);
     return;
   }
+
   showTyping();
   try {
     const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${geminiKey}`, {
-      method:'POST', headers:{'Content-Type':'application/json'},
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        system_instruction:{parts:[{text:'Tum "Ashish AI" ho — Ashish AI Hub Pro app ka friendly AI. Hinglish mein baat karo. Helpful, fun aur creative raho. Emojis use karo.'}]},
+        system_instruction: { parts: [{ text: 'Tum "Ashish AI" ho — friendly AI assistant. Hinglish mein baat karo. Helpful aur creative raho.' }] },
         contents: chatHistory
       })
     });
@@ -950,32 +1910,72 @@ async function sendMsg() {
     removeTyping();
     if (data.candidates?.[0]?.content?.parts?.[0]?.text) {
       const reply = data.candidates[0].content.parts[0].text;
-      chatHistory.push({role:'model',parts:[{text:reply}]});
-      addMsg('bot', reply.replace(/\n/g,'<br>'));
+      chatHistory.push({ role: 'model', parts: [{ text: reply }] });
+      addMsg('bot', reply.replace(/\n/g, '<br>'));
     } else {
-      addMsg('bot','❌ Kuch issue hua. Dobara try karo!');
+      addMsg('bot', '❌ Kuch issue hua!');
     }
-  } catch(e) {
+  } catch (e) {
     removeTyping();
-    addMsg('bot','❌ Network error!');
+    addMsg('bot', '❌ Network error!');
   }
   document.getElementById('sendBtn').disabled = false;
 }
 
-// ── KEY MODAL ──
+// ── API KEY MODAL ──
 function showKeyModal() {
-  document.getElementById('keyModal').style.display = 'block';
-  if(geminiKey) document.getElementById('keyIn').value = geminiKey;
+  document.getElementById('keyModal').style.display = 'flex';
+  if (geminiKey) document.getElementById('keyIn').value = geminiKey;
 }
-function closeKeyModalOutside(e) { if(e.target.classList.contains('key-modal')) document.getElementById('keyModal').style.display='none'; }
+
+function closeKeyModalOutside(e) {
+  if (e.target.classList.contains('key-modal')) {
+    document.getElementById('keyModal').style.display = 'none';
+  }
+}
+
 function saveKey() {
   const k = document.getElementById('keyIn').value.trim();
-  if (!k) { alert('Key daalo!'); return; }
+  if (!k) {
+    alert('Key daalo!');
+    return;
+  }
   geminiKey = k;
   localStorage.setItem('g_key', k);
   document.getElementById('keyModal').style.display = 'none';
   document.getElementById('apiNotice').style.display = 'none';
-  addMsg('bot','✅ API key save ho gayi! Ab sab AI tools kaam karenge 🚀');
+  addMsg('bot', '✅ API key save ho gayi! Ab sab kaam karenge 🚀');
+}
+
+// ── PROFILE FUNCTIONS ──
+function shareApp() {
+  if (navigator.share) {
+    navigator.share({
+      title: 'Ashish AI Hub Pro',
+      text: 'Check out this amazing AI app!',
+      url: window.location.href
+    });
+  } else {
+    alert('Share link: ' + window.location.href);
+  }
+}
+
+function logout() {
+  if (confirm('Logout karna chahte ho?')) {
+    localStorage.clear();
+    chatHistory = [];
+    geminiKey = '';
+    document.getElementById('msgs').innerHTML = '';
+    document.getElementById('emptyChat').style.display = 'flex';
+    document.getElementById('apiNotice').style.display = 'flex';
+    navTo('home');
+    alert('✅ Logout successful!');
+  }
+}
+
+// ── INIT ──
+if (geminiKey) {
+  document.getElementById('apiNotice').style.display = 'none';
 }
 </script>
 </body>
