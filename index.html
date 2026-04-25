@@ -3108,6 +3108,212 @@ if (geminiKey) {
         }
     };
   </script>
+  /* CSS Completion */
+    .tools-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+</head>
+<body>
+
+  <div id="home" class="screen active">
+    <div class="scroll-body">
+      <div class="home-header">
+        <div class="htop">
+          <div class="avatar" onclick="navTo('profile')">A</div>
+          <div class="hactions">
+            <div class="icon-btn"><span class="ndot"></span>🔔</div>
+          </div>
+        </div>
+        <div class="greet">Good Morning,</div>
+        <div class="greet-name">Ashish</div>
+        <div class="search-bar" onclick="navTo('aichat')">
+          <span>Ask me anything...</span>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="sec-head"><div class="sec-title">Quick Actions</div></div>
+        <div class="qgrid">
+          <div class="qi" onclick="navTo('aichat')"><div class="qi-icon">💬</div><div class="qi-label">AI Chat</div></div>
+          <div class="qi" onclick="navTo('aitools')"><div class="qi-icon">🛠️</div><div class="qi-label">Tools</div></div>
+          <div class="qi"><div class="qi-icon">🎮</div><div class="qi-label">Games</div></div>
+          <div class="qi"><div class="qi-icon">💰</div><div class="qi-label">Wallet</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="aitools" class="screen">
+    <div class="page-header">
+      <div class="back-btn" onclick="navTo('home')">←</div>
+      <div class="page-title">AI Hub Pro Tools</div>
+    </div>
+    <div class="scroll-body">
+      <div class="tools-hero">
+        <div class="th-title">Premium Tools</div>
+        <div class="th-sub">High-quality AI generation at your fingertips.</div>
+        <div class="th-emoji">🚀</div>
+      </div>
+      <div class="section">
+        <div class="tools-grid">
+          <div class="tool-card" onclick="alert('Image Tool Coming Soon!')">
+            <div class="tool-icon">🎨</div>
+            <div class="tool-name">3D Avatar</div>
+            <div class="tool-desc">Create 3D Pixar style avatars.</div>
+          </div>
+          <div class="tool-card" onclick="navTo('aichat')">
+            <div class="tool-icon">✍️</div>
+            <div class="tool-name">AI Writer</div>
+            <div class="tool-desc">Emails, Blogs & Scripts.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="aichat" class="screen">
+    <div class="page-header">
+      <div class="back-btn" onclick="navTo('home')">←</div>
+      <div class="page-title">AI Assistant</div>
+    </div>
+    <div class="chat-body">
+      <div class="empty-chat" id="emptyChat">
+        <div class="ec-icon">✨</div>
+        <div class="ec-title">How can I help?</div>
+        <div class="ec-desc">I can write code, plan trips, or just chat.</div>
+      </div>
+      <div class="msgs" id="msgs"></div>
+      <div id="loading" class="loading-dots" style="display:none">
+        <div class="ldot"></div><div class="ldot"></div><div class="ldot"></div>
+      </div>
+    </div>
+    <div class="chat-input">
+      <div class="input-wrap">
+        <input type="text" id="chatInput" placeholder="Message Ashish AI...">
+        <button class="send-btn" id="sendBtn" onclick="handleGenerate()">↑</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="profile" class="screen">
+    <div class="profile-header">
+      <div class="profile-avatar">A</div>
+      <div class="profile-name">Ashish</div>
+      <div class="profile-email">Developer Mode</div>
+    </div>
+    <div class="menu-list">
+      <div class="menu-item" onclick="saveKey()">
+        <div class="menu-icon">🔑</div>
+        <div class="menu-info"><div class="menu-title">API Key Settings</div><div class="menu-desc">Manage your Gemini Key</div></div>
+      </div>
+      <div class="menu-item" onclick="logout()">
+        <div class="menu-icon">🚪</div>
+        <div class="menu-info"><div class="menu-title" style="color:red">Logout</div></div>
+      </div>
+    </div>
+  </div>
+
+  <nav class="bnav">
+    <div class="ni active" id="nav-home" onclick="navTo('home')"><div class="ni-icon">🏠</div><div class="ni-label">Home</div></div>
+    <div class="ni" id="nav-tools" onclick="navTo('aitools')"><div class="ni-icon">🛠️</div><div class="ni-label">Tools</div></div>
+    <div class="nav-fab" onclick="navTo('aichat')">✨</div>
+    <div class="ni"><div class="ni-icon">🎮</div><div class="ni-label">Games</div></div>
+    <div class="ni" id="nav-profile" onclick="navTo('profile')"><div class="ni-icon">👤</div><div class="ni-label">Profile</div></div>
+  </nav>
+
+  <script type="module">
+    import { GoogleGenerativeAI } from "https://esm.run/@google/generative-ai";
+
+    let geminiKey = localStorage.getItem('g_key') || "";
+    let genAI = null;
+    let model = null;
+
+    if (geminiKey) initializeAI(geminiKey);
+
+    function initializeAI(key) {
+        try {
+            genAI = new GoogleGenerativeAI(key);
+            // 2026 Stable Model: 1.5-flash
+            model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+        } catch (e) { console.error(e); }
+    }
+
+    // SCREEN NAVIGATION
+    window.navTo = (id) => {
+        document.querySelectorAll('.screen').forEach(s => s.style.display = 'none');
+        document.querySelectorAll('.ni').forEach(n => n.classList.remove('active'));
+        
+        const target = document.getElementById(id);
+        if(target) target.style.display = 'flex';
+        
+        // Active Nav color
+        if(id === 'home') document.getElementById('nav-home').classList.add('active');
+        if(id === 'aitools') document.getElementById('nav-tools').classList.add('active');
+        if(id === 'profile') document.getElementById('nav-profile').classList.add('active');
+    };
+
+    // CHAT GENERATION
+    window.handleGenerate = async () => {
+        const input = document.getElementById('chatInput');
+        const text = input.value.trim();
+        if (!text || !model) {
+            if(!model) alert("Pehle Profile me jaakar API Key save karein!");
+            return;
+        }
+
+        document.getElementById('emptyChat').style.display = 'none';
+        addMsg('user', text);
+        input.value = '';
+        document.getElementById('loading').style.display = 'flex';
+
+        try {
+            const result = await model.generateContent(text);
+            const response = await result.response;
+            addMsg('ai', response.text());
+        } catch (e) {
+            addMsg('ai', "Error: " + e.message);
+        } finally {
+            document.getElementById('loading').style.display = 'none';
+        }
+    };
+
+    function addMsg(role, text) {
+        const container = document.getElementById('msgs');
+        const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        const html = `
+            <div class="msg ${role}">
+                <div class="msg-av">${role === 'user' ? 'A' : '✨'}</div>
+                <div class="bubble">${text}<div class="msg-t">${time}</div></div>
+            </div>`;
+        container.innerHTML += html;
+        const chatBody = document.querySelector('.chat-body');
+        chatBody.scrollTop = chatBody.scrollHeight;
+    }
+
+    // SETTINGS & STORAGE
+    window.saveKey = () => {
+        const key = prompt("Enter Gemini API Key:");
+        if(key && key.length > 20) {
+            localStorage.setItem('g_key', key);
+            alert("Key saved! App restarting...");
+            location.reload();
+        } else {
+            alert("Invalid Key!");
+        }
+    };
+
+    window.logout = () => {
+        if(confirm("Logout and clear settings?")) {
+            localStorage.clear();
+            location.reload();
+        }
+    };
+  </script>
+</body>
+</html>
+  
 </body>
 </html>
   
