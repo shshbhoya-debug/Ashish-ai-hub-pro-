@@ -2751,6 +2751,165 @@ if (geminiKey) {
     showScreen('home');
 
           </script>
-  
+      /* CSS Completion */
+    .tools-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+</head>
+<body>
+
+<script type="module">
+  import { GoogleGenerativeAI } from "https://esm.run/@google/generative-ai";
+
+  // 1. APP STATE & CONFIG
+  let geminiKey = localStorage.getItem('g_key') || "";
+  let genAI = null;
+  let model = null;
+  let chatHistory = [];
+
+  // Agar key pehle se hai toh AI initialize karein
+  if (geminiKey) {
+    initializeAI(geminiKey);
+    const notice = document.getElementById('apiNotice');
+    if(notice) notice.style.display = 'none';
+  }
+
+  function initializeAI(key) {
+    try {
+      genAI = new GoogleGenerativeAI(key);
+      // Fixed 404 Error: Using gemini-1.5-flash
+      model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+      console.log("Gemini 1.5 Flash Active");
+    } catch (e) {
+      console.error("AI Init Failed", e);
+    }
+  }
+
+  // 2. NAVIGATION (Screens Switch Karne Ke Liye)
+  window.navTo = (screenId) => {
+    // Sabhi screens hide karein
+    document.querySelectorAll('.screen').forEach(s => {
+      s.style.display = 'none';
+      s.classList.remove('active');
+    });
+
+    // Target screen show karein
+    const target = document.getElementById(screenId);
+    if (target) {
+      target.style.display = 'flex';
+      target.classList.add('active');
+    }
+
+    // Bottom Nav Icons update karein
+    document.querySelectorAll('.ni').forEach(nav => {
+      nav.classList.remove('active');
+      if (nav.getAttribute('onclick')?.includes(screenId)) {
+        nav.classList.add('active');
+      }
+    });
+    
+    window.scrollTo(0, 0);
+  };
+
+  // 3. CHAT LOGIC
+  const chatInput = document.querySelector('.input-wrap input');
+  const msgsContainer = document.querySelector('.msgs');
+  const chatBody = document.querySelector('.chat-body');
+  const emptyChat = document.querySelector('.empty-chat');
+
+  window.handleGenerate = async () => {
+    const text = chatInput.value.trim();
+    if (!text) return;
+
+    if (!model) {
+      alert("Pehle Profile mein jaakar API Key save karein!");
+      navTo('profile');
+      return;
+    }
+
+    // Update UI
+    if(emptyChat) emptyChat.style.display = 'none';
+    addMsgToUI('user', text);
+    chatInput.value = '';
+
+    // Typing start
+    const typingId = 'typing-' + Date.now();
+    showTyping(typingId);
+
+    try {
+      const result = await model.generateContent(text);
+      const response = await result.response;
+      const aiText = response.text();
+
+      removeTyping(typingId);
+      addMsgToUI('ai', aiText);
+    } catch (error) {
+      removeTyping(typingId);
+      addMsgToUI('ai', "Error: " + error.message);
+    }
+  };
+
+  function addMsgToUI(role, text) {
+    const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    const msgHtml = `
+      <div class="msg ${role}">
+        <div class="msg-av">${role === 'user' ? 'A' : '✨'}</div>
+        <div class="bubble">
+          ${text.replace(/\n/g, '<br>')}
+          <div class="msg-t">${time}</div>
+        </div>
+      </div>
+    `;
+    msgsContainer.innerHTML += msgHtml;
+    chatBody.scrollTop = chatBody.scrollHeight;
+  }
+
+  function showTyping(id) {
+    const html = `<div class="msg ai" id="${id}"><div class="msg-av">✨</div><div class="bubble"><div class="typing"><div class="td"></div><div class="td"></div><div class="td"></div></div></div></div>`;
+    msgsContainer.innerHTML += html;
+    chatBody.scrollTop = chatBody.scrollHeight;
+  }
+
+  function removeTyping(id) {
+    const el = document.getElementById(id);
+    if (el) el.remove();
+  }
+
+  // 4. API KEY SETTINGS
+  window.saveKey = () => {
+    const key = prompt("Apni Gemini API Key yahan paste karein:");
+    if (key && key.length > 10) {
+      localStorage.setItem('g_key', key);
+      geminiKey = key;
+      initializeAI(key);
+      alert("✅ API Key Save ho gayi!");
+      location.reload();
+    } else {
+      alert("❌ Galat Key!");
+    }
+  };
+
+  // 5. UTILS
+  window.logout = () => {
+    if(confirm("Logout karna chahte ho?")) {
+      localStorage.clear();
+      location.reload();
+    }
+  };
+
+  // Listen for Enter key
+  chatInput?.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') handleGenerate();
+  });
+
+  // Start at Home
+  navTo('home');
+
+</script>
+</body>
+</html>
+
 </body>
 </html>
