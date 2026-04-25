@@ -2610,5 +2610,147 @@ if (geminiKey) {
   document.getElementById('apiNotice').style.display = 'none';
 }
 </script>
+  <script type="module">
+    import { GoogleGenerativeAI } from "https://esm.run/@google/generative-ai";
+
+    // 1. CONFIGURATION & STATE
+    let API_KEY = localStorage.getItem('GEMINI_API_KEY') || ""; // Local storage se key uthayega
+    let genAI = null;
+    let model = null;
+    let chatHistory = [];
+
+    if (API_KEY) {
+        initializeAI(API_KEY);
+    }
+
+    function initializeAI(key) {
+        genAI = new GoogleGenerativeAI(key);
+        // Hum 1.5-flash use kar rahe hain kyunki ye fast aur free hai
+        model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+        console.log("AI Initialized with Gemini 1.5 Flash");
+    }
+
+    // 2. NAVIGATION LOGIC (Screens switch karne ke liye)
+    window.showScreen = (screenId) => {
+        // Sabhi screens ko hide karein
+        document.querySelectorAll('.screen').forEach(s => s.style.display = 'none');
+        // Selected screen ko show karein
+        const target = document.getElementById(screenId);
+        if (target) {
+            target.style.display = 'flex';
+            target.classList.add('active');
+        }
+        
+        // Navigation bar ke active icons update karein
+        document.querySelectorAll('.ni').forEach(nav => {
+            nav.classList.remove('active');
+            if (nav.getAttribute('onclick')?.includes(screenId)) {
+                nav.classList.add('active');
+            }
+        });
+    };
+
+    // 3. CHAT LOGIC
+    const chatInput = document.querySelector('.input-wrap input');
+    const sendBtn = document.querySelector('.send-btn');
+    const chatBody = document.querySelector('.chat-body');
+    const msgsContainer = document.querySelector('.msgs');
+    const emptyChat = document.querySelector('.empty-chat');
+
+    window.sendMessage = async () => {
+        const text = chatInput.value.trim();
+        if (!text) return;
+        if (!API_KEY) {
+            alert("Pehle Profile mein jaakar API Key add karein!");
+            showScreen('profile');
+            return;
+        }
+
+        // UI Update: Hide empty state, clear input, show user message
+        emptyChat.style.display = 'none';
+        chatInput.value = '';
+        addMessageToUI('user', text);
+        
+        // Show Typing Indicator
+        const typingId = addTypingIndicator();
+
+        try {
+            const chatSession = model.startChat({ history: chatHistory });
+            const result = await chatSession.sendMessage(text);
+            const responseText = await result.response.text();
+
+            // Remove typing and show AI response
+            removeTypingIndicator(typingId);
+            addMessageToUI('ai', responseText);
+
+            // Update local history
+            chatHistory.push({ role: "user", parts: [{ text }] });
+            chatHistory.push({ role: "model", parts: [{ text: responseText }] });
+
+        } catch (error) {
+            removeTypingIndicator(typingId);
+            addMessageToUI('ai', "Error: API Key check karein ya internet check karein. " + error.message);
+        }
+    };
+
+    function addMessageToUI(role, text) {
+        const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        const msgHtml = `
+            <div class="msg ${role}">
+                <div class="msg-av">${role === 'user' ? 'A' : '✨'}</div>
+                <div class="bubble">
+                    ${text.replace(/\n/g, '<br>')}
+                    <div class="msg-t">${time}</div>
+                </div>
+            </div>
+        `;
+        msgsContainer.innerHTML += msgHtml;
+        chatBody.scrollTop = chatBody.scrollHeight;
+    }
+
+    function addTypingIndicator() {
+        const id = 'typing-' + Date.now();
+        const html = `
+            <div class="msg ai" id="${id}">
+                <div class="msg-av">✨</div>
+                <div class="bubble">
+                    <div class="typing">
+                        <div class="td"></div><div class="td"></div><div class="td"></div>
+                    </div>
+                </div>
+            </div>
+        `;
+        msgsContainer.innerHTML += html;
+        chatBody.scrollTop = chatBody.scrollHeight;
+        return id;
+    }
+
+    function removeTypingIndicator(id) {
+        const el = document.getElementById(id);
+        if (el) el.remove();
+    }
+
+    // Enter key se message bhejne ke liye
+    chatInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') sendMessage();
+    });
+    sendBtn.addEventListener('click', sendMessage);
+
+    // 4. API KEY SETUP (Profile Section)
+    window.saveApiKey = () => {
+        const key = prompt("Apni Google Gemini API Key yahan enter karein:");
+        if (key) {
+            localStorage.setItem('GEMINI_API_KEY', key);
+            API_KEY = key;
+            initializeAI(key);
+            alert("API Key Saved Successfully!");
+        }
+    };
+
+    // 5. INITIALIZE (Home screen dikhayein)
+    showScreen('home');
+
+          </script>
+  
 </body>
 </html>
