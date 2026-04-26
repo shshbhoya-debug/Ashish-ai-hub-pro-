@@ -1,23 +1,30 @@
-const API_URL = "https://openrouter.ai/api/v1/chat/completions";
-// Note: Apni API Key .env file mein hi rakhein
-const API_KEY = "YOUR_OPENROUTER_API_KEY"; 
+import React, { useState } from 'react';
 
-export const getAIResponse = async (userMessage) => {
-  try {
-    const response = await fetch(API_URL, {
-      method: "POST",
-      headers: {
-        "Authorization": `Bearer ${API_KEY}`,
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        "model": "google/gemini-2.0-flash-exp:free",
-        "messages": [{"role": "user", "content": userMessage}]
-      })
-    });
-    const data = await response.json();
-    return data.choices[0].message.content;
-  } catch (error) {
-    return "AI Error: Connection failed.";
-  }
+const ImageGeneratorScreen = () => {
+  const [prompt, setPrompt] = useState('');
+  const [imageUrl, setImageUrl] = useState(null);
+
+  const generateImage = () => {
+    const url = `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=1024&height=1024&nologo=true`;
+    setImageUrl(url);
+  };
+
+  return (
+    <div style={{ padding: '20px', textAlign: 'center' }}>
+      <h2>AI Artist 🖌️</h2>
+      <input 
+        type="text" 
+        value={prompt} 
+        onChange={(e) => setPrompt(e.target.value)} 
+        placeholder="Describe your image..." 
+        style={{ width: '80%', padding: '10px', marginBottom: '10px' }}
+      />
+      <button onClick={generateImage} style={{ padding: '10px', backgroundColor: '#ff4757', color: 'white', border: 'none', borderRadius: '5px' }}>
+        Create Magic
+      </button>
+      {imageUrl && <img src={imageUrl} alt="AI Generated" style={{ width: '100%', marginTop: '20px', borderRadius: '10px' }} />}
+    </div>
+  );
 };
+
+export default ImageGeneratorScreen;
