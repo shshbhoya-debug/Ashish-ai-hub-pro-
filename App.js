@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { 
   Text, View, StyleSheet, TextInput, TouchableOpacity, 
-  ScrollView, Image, SafeAreaView, Dimensions, StatusBar 
+  ScrollView, Image, SafeAreaView, Dimensions, StatusBar, ActivityIndicator 
 } from 'react-native';
 
 const { width } = Dimensions.get('window');
 
-// ── THEME COLORS (Directly from your HTML CSS) ──
+// ── THEME COLORS (From your HTML Design) ──
 const Colors = {
   bg: '#FFFFFF',
   bgSecondary: '#F7F7F8',
@@ -17,211 +17,165 @@ const Colors = {
 };
 
 export default function App() {
-  const [currentScreen, setCurrentScreen] = useState('home');
+  const [screen, setScreen] = useState('splash');
+  const [inputText, setInputText] = useState('');
+  const [messages, setMessages] = useState([{role: 'ai', text: 'Namaste Ashish! Main aapki kya madad kar sakta hoon?'}]);
+  const [loading, setLoading] = useState(false);
+  const [generatedImage, setGeneratedImage] = useState(null);
 
-  // ── HOME SCREEN COMPONENT ──
-  const HomeScreen = () => (
-    <ScrollView style={styles.scrollBody} showsVerticalScrollIndicator={false}>
-      <View style={styles.homeHeader}>
-        <View style={styles.hTop}>
-          <View style={styles.avatar}><Text style={{color:'#fff', fontWeight:'bold'}}>A</Text></View>
-          <View style={styles.hActions}>
-            <TouchableOpacity style={styles.iconBtn}><Text>🔔</Text></TouchableOpacity>
-            <TouchableOpacity style={styles.iconBtn}><Text>⚙️</Text></TouchableOpacity>
-          </View>
-        </View>
-        <Text style={styles.greetText}>Good Morning,</Text>
-        <Text style={styles.greetName}>Ashish 👋</Text>
-        
-        <TouchableOpacity style={styles.searchBar}>
-          <Text style={{color: Colors.textSecondary}}>Search AI Tools...</Text>
-        </TouchableOpacity>
-      </View>
+  // --- AI LOGIC (Chat & Image) ---
+  const handleChat = async () => {
+    if (!inputText.trim()) return;
+    const userMsg = {role: 'user', text: inputText};
+    setMessages([...messages, userMsg]);
+    const currentInput = inputText; setInputText(''); setLoading(true);
+    try {
+      const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+        method: "POST",
+        headers: { "Authorization": "Bearer YOUR_KEY", "Content-Type": "application/json" },
+        body: JSON.stringify({ "model": "google/gemini-2.0-flash-exp:free", "messages": [{"role": "user", "content": currentInput}] })
+      });
+      const data = await response.json();
+      setMessages(prev => [...prev, {role: 'ai', text: data.choices[0].message.content}]);
+    } catch (e) { setMessages(prev => [...prev, {role: 'ai', text: 'Connection Error! Check API Key.'}]); }
+    setLoading(false);
+  };
 
-      {/* Banner Section */}
-      <View style={styles.section}>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} pagingEnabled>
-          <View style={[styles.bannerCard, {backgroundColor: '#E6F7F3'}]}>
-            <Text style={{fontSize: 32}}>🚀</Text>
-            <Text style={styles.bcLabel}>NEW RELEASE</Text>
-            <Text style={styles.bcTitle}>Gemini 2.0 Flash is here!</Text>
-          </View>
-        </ScrollView>
-      </View>
+  const handleImage = () => {
+    if (!inputText.trim()) return;
+    setLoading(true);
+    setGeneratedImage(`https://image.pollinations.ai/prompt/${encodeURIComponent(inputText)}?width=1024&height=1024&nologo=true`);
+    setLoading(false);
+  };
 
-      {/* Quick Actions Grid */}
-      <View style={styles.section}>
-        <View style={styles.secHead}>
-          <Text style={styles.secTitle}>QUICK ACTIONS</Text>
-        </View>
-        <View style={styles.qGrid}>
-          {['Chat', 'Image', 'Code', 'Write'].map((item, i) => (
-            <TouchableOpacity key={i} style={styles.qi} onPress={() => item === 'Chat' ? setCurrentScreen('chat') : null}>
-              <View style={styles.qiIcon}>
-                <Text style={{fontSize: 24}}>{['💬', '🎨', '💻', '📝'][i]}</Text>
-              </View>
-              <Text style={styles.qiLabel}>{item}</Text>
+  // --- SCREEN RENDERER ---
+  const renderScreen = () => {
+    switch(screen) {
+      case 'splash':
+        return (
+          <View style={[styles.center, {backgroundColor: Colors.primary}]}>
+            <Text style={{fontSize: 80}}>🤖</Text>
+            <Text style={[styles.greetName, {color: '#fff'}]}>Ashish AI Hub Pro</Text>
+            <TouchableOpacity style={[styles.mainBtn, {backgroundColor: '#fff', width: '60%', marginTop: 40}]} onPress={() => setScreen('login')}>
+              <Text style={{color: Colors.primary, fontWeight: 'bold'}}>Get Started 🚀</Text>
             </TouchableOpacity>
-          ))}
-        </View>
-      </View>
+          </View>
+        );
 
-      {/* Recent Activity */}
-      <View style={styles.section}>
-        <Text style={styles.secTitle}>RECENT ACTIVITY</Text>
-        <View style={styles.actList}>
-          <View style={styles.actItem}>
-            <View style={styles.actIcon}><Text>🤖</Text></View>
-            <View style={styles.actInfo}>
-              <Text style={styles.actName}>React Native Project</Text>
-              <Text style={styles.actTime}>Just Now</Text>
+      case 'login':
+        return (
+          <View style={styles.center}>
+            <Text style={styles.greetName}>Welcome Back</Text>
+            <Text style={styles.greetText}>Log in with your Ashish AI account</Text>
+            <TextInput placeholder="Email" style={styles.loginInput} />
+            <TextInput placeholder="Password" style={styles.loginInput} secureTextEntry />
+            <TouchableOpacity style={styles.mainBtn} onPress={() => setScreen('home')}>
+              <Text style={{color: '#fff', fontWeight: 'bold'}}>Continue</Text>
+            </TouchableOpacity>
+          </View>
+        );
+
+      case 'home':
+        return (
+          <ScrollView style={styles.scrollBody}>
+            <View style={styles.homeHeader}>
+               <View style={styles.hTop}>
+                 <View style={styles.avatar}><Text style={{color:'#fff'}}>A</Text></View>
+                 <Text style={styles.greetName}>Ashish 👋</Text>
+               </View>
+               <TouchableOpacity style={styles.searchBar}><Text style={{color: '#999'}}>Search AI Tools...</Text></TouchableOpacity>
+            </View>
+            <View style={styles.section}>
+              <View style={styles.bannerCard}><Text style={styles.bcTitle}>Gemini 2.0 Now Live! 🚀</Text></View>
+              <Text style={styles.secTitle}>QUICK ACTIONS</Text>
+              <View style={styles.qGrid}>
+                <TouchableOpacity style={styles.qi} onPress={()=>setScreen('chat')}><View style={styles.qiIcon}><Text>💬</Text></View><Text>Chat</Text></TouchableOpacity>
+                <TouchableOpacity style={styles.qi} onPress={()=>setScreen('image')}><View style={styles.qiIcon}><Text>🎨</Text></View><Text>Art</Text></TouchableOpacity>
+                <TouchableOpacity style={styles.qi} onPress={()=>setScreen('gaming')}><View style={styles.qiIcon}><Text>🎮</Text></View><Text>Games</Text></TouchableOpacity>
+                <TouchableOpacity style={styles.qi} onPress={()=>setScreen('wallet')}><View style={styles.qiIcon}><Text>💰</Text></View><Text>Wallet</Text></TouchableOpacity>
+              </View>
+            </View>
+          </ScrollView>
+        );
+
+      case 'chat':
+        return (
+          <View style={{flex: 1}}>
+            <ScrollView style={{padding: 15}}>
+              {messages.map((m, i) => (
+                <View key={i} style={[styles.bubble, m.role === 'user' ? styles.userBubble : styles.aiBubble]}>
+                  <Text style={{color: m.role === 'user' ? '#fff' : '#000'}}>{m.text}</Text>
+                </View>
+              ))}
+              {loading && <ActivityIndicator color={Colors.primary} />}
+            </ScrollView>
+            <View style={styles.chatInputRow}>
+              <TextInput value={inputText} onChangeText={setInputText} placeholder="Ask me anything..." style={styles.cInput} />
+              <TouchableOpacity onPress={handleChat} style={styles.sendBtn}><Text style={{color:'#fff'}}>Send</Text></TouchableOpacity>
             </View>
           </View>
-        </View>
-      </View>
-    </ScrollView>
-  );
+        );
 
-  // ── MAIN RENDER ──
+      case 'image':
+        return (
+          <View style={styles.center}>
+            <Text style={styles.secTitle}>AI Image Creator</Text>
+            <TextInput value={inputText} onChangeText={setInputText} placeholder="Describe the image..." style={styles.loginInput} />
+            <TouchableOpacity style={styles.mainBtn} onPress={handleImage}><Text style={{color:'#fff'}}>Generate Art</Text></TouchableOpacity>
+            {generatedImage && <Image source={{uri: generatedImage}} style={styles.previewImg} />}
+          </View>
+        );
+        
+      default:
+        return <View style={styles.center}><Text>{screen.toUpperCase()} Screen Coming Soon</Text><TouchableOpacity onPress={()=>setScreen('home')}><Text>Back Home</Text></TouchableOpacity></View>;
+    }
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" />
+      <View style={{flex: 1}}>{renderScreen()}</View>
       
-      <View style={{flex: 1}}>
-        {currentScreen === 'home' && <HomeScreen />}
-        
-        {currentScreen === 'tools' && (
-          <View style={styles.center}>
-            <View style={styles.toolsHero}>
-               <Text style={styles.thTitle}>AI Tools Grid 🛠️</Text>
-               <Text style={styles.thSub}>Converting your HTML Tools...</Text>
-            </View>
-          </View>
-        )}
-
-        {currentScreen === 'chat' && (
-          <View style={styles.center}>
-            <Text style={styles.title}>AI Chat Interface</Text>
-            <TouchableOpacity onPress={() => setCurrentScreen('home')} style={styles.button}>
-               <Text style={styles.btnText}>Back Home</Text>
-            </TouchableOpacity>
-          </View>
-        )}
-
-        {currentScreen === 'wallet' && (
-          <View style={styles.center}>
-            <Text style={styles.title}>💰 Wallet Balance: 1,250</Text>
-          </View>
-        )}
-
-        {currentScreen === 'profile' && (
-          <View style={styles.center}>
-            <Text style={styles.title}>Profile Settings 👤</Text>
-          </View>
-        )}
-      </View>
-
-      {/* BOTTOM NAVIGATION (Floating Design) */}
-      <View style={styles.bNav}>
-        <TouchableOpacity style={styles.ni} onPress={() => setCurrentScreen('home')}>
-          <Text style={[styles.niIcon, currentScreen === 'home' && styles.activeNav]}>🏠</Text>
-          <Text style={[styles.niLabel, currentScreen === 'home' && styles.activeNav]}>Home</Text>
-        </TouchableOpacity>
-        
-        <TouchableOpacity style={styles.ni} onPress={() => setCurrentScreen('tools')}>
-          <Text style={[styles.niIcon, currentScreen === 'tools' && styles.activeNav]}>🛠️</Text>
-          <Text style={[styles.niLabel, currentScreen === 'tools' && styles.activeNav]}>Tools</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.navFab} onPress={() => setCurrentScreen('chat')}>
-          <Text style={{color: '#fff', fontSize: 24}}>💬</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.ni} onPress={() => setCurrentScreen('wallet')}>
-          <Text style={[styles.niIcon, currentScreen === 'wallet' && styles.activeNav]}>💰</Text>
-          <Text style={[styles.niLabel, currentScreen === 'wallet' && styles.activeNav]}>Wallet</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.ni} onPress={() => setCurrentScreen('profile')}>
-          <Text style={[styles.niIcon, currentScreen === 'profile' && styles.activeNav]}>👤</Text>
-          <Text style={[styles.niLabel, currentScreen === 'profile' && styles.activeNav]}>Profile</Text>
-        </TouchableOpacity>
-      </View>
+      {/* BOTTOM NAV */}
+      {screen !== 'splash' && screen !== 'login' && (
+        <View style={styles.bNav}>
+          <TouchableOpacity onPress={() => setScreen('home')}><Text style={screen === 'home' ? styles.actNav : styles.defNav}>🏠</Text></TouchableOpacity>
+          <TouchableOpacity onPress={() => setScreen('chat')}><Text style={screen === 'chat' ? styles.actNav : styles.defNav}>💬</Text></TouchableOpacity>
+          <TouchableOpacity onPress={() => setScreen('wallet')}><Text style={screen === 'wallet' ? styles.actNav : styles.defNav}>💰</Text></TouchableOpacity>
+          <TouchableOpacity onPress={() => setScreen('profile')}><Text style={screen === 'profile' ? styles.actNav : styles.defNav}>👤</Text></TouchableOpacity>
+        </View>
+      )}
     </SafeAreaView>
   );
 }
 
-// ── STYLES ──
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: Colors.bg },
+  center: { flex: 1, justifyContent: 'center', alignItems: 'center', padding: 30 },
   scrollBody: { flex: 1 },
-  center: { flex: 1, justifyContent: 'center', alignItems: 'center', padding: 20 },
-  title: { fontSize: 22, fontWeight: 'bold', marginBottom: 20 },
-  button: { backgroundColor: Colors.primary, padding: 15, borderRadius: 10 },
-  btnText: { color: 'white', fontWeight: 'bold' },
-  
-  // Home Header
-  homeHeader: { padding: 20, paddingTop: 40 },
-  hTop: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 20 },
-  avatar: { width: 40, height: 40, borderRadius: 20, backgroundColor: Colors.primary, justifyContent: 'center', alignItems: 'center' },
-  hActions: { flexDirection: 'row', gap: 10 },
-  iconBtn: { width: 36, height: 36, borderWidth: 1, borderColor: Colors.border, borderRadius: 8, justifyContent: 'center', alignItems: 'center' },
-  greetText: { fontSize: 13, color: Colors.textSecondary },
   greetName: { fontSize: 26, fontWeight: 'bold', color: Colors.text },
-  
-  // Search Bar
-  searchBar: { 
-    flexDirection: 'row', alignItems: 'center', 
-    backgroundColor: Colors.bgSecondary, padding: 14, 
-    borderRadius: 12, marginTop: 20, borderWidth: 1, borderColor: '#F0F0F0' 
-  },
-
-  // Banner
-  section: { paddingHorizontal: 20, marginTop: 25 },
-  bannerCard: { 
-    width: width - 40, height: 130, borderRadius: 16, 
-    padding: 20, justifyContent: 'center', borderWidth: 1, borderColor: Colors.border 
-  },
-  bcLabel: { fontSize: 10, fontWeight: '800', color: Colors.primary, marginBottom: 5 },
-  bcTitle: { fontSize: 18, fontWeight: '700' },
-
-  // Quick Grid
-  secHead: { marginBottom: 15 },
-  secTitle: { fontSize: 14, fontWeight: '700', color: Colors.text },
+  greetText: { fontSize: 14, color: Colors.textSecondary, marginTop: 5 },
+  loginInput: { width: '100%', height: 55, backgroundColor: Colors.bgSecondary, borderRadius: 12, paddingHorizontal: 15, marginBottom: 15, borderWidth: 1, borderColor: Colors.border },
+  mainBtn: { width: '100%', height: 55, backgroundColor: Colors.primary, borderRadius: 12, justifyContent: 'center', alignItems: 'center' },
+  homeHeader: { padding: 20, paddingTop: 40 },
+  hTop: { flexDirection: 'row', alignItems: 'center', gap: 10 },
+  avatar: { width: 40, height: 40, borderRadius: 20, backgroundColor: Colors.primary, justifyContent: 'center', alignItems: 'center' },
+  searchBar: { backgroundColor: Colors.bgSecondary, padding: 14, borderRadius: 12, marginTop: 20 },
+  section: { paddingHorizontal: 20 },
+  bannerCard: { height: 100, borderRadius: 15, backgroundColor: '#E6F7F3', justifyContent: 'center', padding: 20, marginBottom: 20 },
+  bcTitle: { fontSize: 18, fontWeight: 'bold', color: Colors.primary },
+  secTitle: { fontSize: 14, fontWeight: 'bold', marginBottom: 15 },
   qGrid: { flexDirection: 'row', justifyContent: 'space-between' },
-  qi: { alignItems: 'center', gap: 8 },
-  qiIcon: { width: 68, height: 68, borderRadius: 15, backgroundColor: Colors.bgSecondary, justifyContent: 'center', alignItems: 'center', borderWidth: 1, borderColor: Colors.border },
-  qiLabel: { fontSize: 12, fontWeight: '600', color: Colors.textSecondary },
-
-  // Activity List
-  actList: { marginTop: 10, gap: 10 },
-  actItem: { flexDirection: 'row', alignItems: 'center', padding: 12, backgroundColor: '#fff', borderRadius: 12, borderWidth: 1, borderColor: Colors.border },
-  actIcon: { width: 40, height: 40, borderRadius: 8, backgroundColor: Colors.bgSecondary, justifyContent: 'center', alignItems: 'center' },
-  actInfo: { marginLeft: 12 },
-  actName: { fontSize: 14, fontWeight: '600' },
-  actTime: { fontSize: 11, color: Colors.textSecondary },
-
-  // Tools Hero
-  toolsHero: { width: width - 40, backgroundColor: Colors.primary, borderRadius: 16, padding: 25 },
-  thTitle: { color: '#fff', fontSize: 20, fontWeight: 'bold' },
-  thSub: { color: 'rgba(255,255,255,0.8)', fontSize: 13, marginTop: 5 },
-
-  // Bottom Nav
-  bNav: { 
-    flexDirection: 'row', height: 85, backgroundColor: '#fff', 
-    borderTopWidth: 1, borderTopColor: Colors.border, 
-    paddingBottom: 20, alignItems: 'center' 
-  },
-  ni: { flex: 1, alignItems: 'center', justifyContent: 'center' },
-  niIcon: { fontSize: 20, color: '#9B9B9B' },
-  niLabel: { fontSize: 11, color: '#9B9B9B', marginTop: 4 },
-  activeNav: { color: Colors.primary },
-  navFab: { 
-    width: 55, height: 55, borderRadius: 18, 
-    backgroundColor: Colors.primary, marginTop: -40, 
-    justifyContent: 'center', alignItems: 'center',
-    shadowColor: Colors.primary, shadowOffset: { width: 0, height: 5 }, 
-    shadowOpacity: 0.4, shadowRadius: 10, elevation: 8
-  }
+  qi: { alignItems: 'center' },
+  qiIcon: { width: 65, height: 65, backgroundColor: Colors.bgSecondary, borderRadius: 15, justifyContent: 'center', alignItems: 'center', borderWidth: 1, borderColor: Colors.border },
+  bNav: { flexDirection: 'row', height: 75, backgroundColor: '#fff', borderTopWidth: 1, borderTopColor: Colors.border, justifyContent: 'space-around', alignItems: 'center', paddingBottom: 15 },
+  actNav: { fontSize: 22, color: Colors.primary },
+  defNav: { fontSize: 22, color: '#999' },
+  bubble: { padding: 12, borderRadius: 15, marginBottom: 10, maxWidth: '80%' },
+  userBubble: { backgroundColor: Colors.primary, alignSelf: 'flex-end' },
+  aiBubble: { backgroundColor: Colors.bgSecondary, alignSelf: 'flex-start' },
+  chatInputRow: { flexDirection: 'row', padding: 15, borderTopWidth: 1, borderColor: Colors.border },
+  cInput: { flex: 1, height: 45, backgroundColor: Colors.bgSecondary, borderRadius: 20, paddingHorizontal: 15 },
+  sendBtn: { backgroundColor: Colors.primary, padding: 10, borderRadius: 20, marginLeft: 10 },
+  previewImg: { width: 300, height: 300, marginTop: 20, borderRadius: 15 }
 });
-          
