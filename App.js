@@ -24,7 +24,7 @@ export default function App() {
     try {
       const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
         method: "POST",
-        headers: { "Authorization": "Bearer YOUR_KEY", "Content-Type": "application/json" },
+        headers: { "Authorization": "Bearer AIzaSyDiBk7pKBzFJaWqGQSIAelR3ZlWIsU2lwU", "Content-Type": "application/json" },
         body: JSON.stringify({
           "model": "google/gemini-2.0-flash-exp:free",
           "messages": [{ "role": "system", "content": `You are a ${selectedAgent?.name} expert.` }, { "role": "user", "content": inputText }]
