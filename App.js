@@ -16,6 +16,7 @@ import ProjectDetailScreen from './src/screens/ProjectDetailScreen';
 import DevSettingsScreen from './src/screens/DevSettingsScreen';
 import PreviewScreen from './src/screens/PreviewScreen';
 import SecurityScreen from './src/screens/SecurityScreen';
+import NotificationScreen from './src/screens/NotificationScreen';
 import SupportScreen from './src/screens/SupportScreen';
 import WalletHistoryScreen from './src/screens/WalletHistoryScreen';
 import LockScreen from './src/screens/LockScreen';
@@ -64,6 +65,7 @@ export default function App() {
             <Stack.Screen name="PreviewScreen" component={PreviewScreen} />
             <Stack.Screen name="SecurityScreen" component={SecurityScreen} />
             <Stack.Screen name="SupportScreen" component={SupportScreen} />
+          <Stack.Screen name="NotificationScreen" component={NotificationScreen} />
             <Stack.Screen name="WalletHistoryScreen" component={WalletHistoryScreen} />
           </Stack.Navigator>
         )}
