@@ -1,111 +1,100 @@
-import React, { useState, useRef, useContext, useEffect } from 'react';
+import React, { useState, useContext, useRef } from 'react';
 import { 
-  View, Text, TextInput, TouchableOpacity, StyleSheet, 
-  SafeAreaView, FlatList, KeyboardAvoidingView, Platform, 
-  StatusBar, Animated, ScrollView 
+  View, Text, StyleSheet, SafeAreaView, TextInput, 
+  TouchableOpacity, FlatList, KeyboardAvoidingView, Platform 
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { AppContext } from '../context/AppContext';
+import { callOpenRouter } from '../services/aiService';
 
-const aiTools = [
-  { id: 'gen', name: 'General AI', icon: 'chatbubble-ellipses', color: '#007AFF', desc: 'Everyday assistant' },
-  { id: 'code', name: 'Code Architect', icon: 'code-slash', color: '#AF52DE', desc: 'Full project expert' },
-  { id: 'art', name: 'Prompt Guru', icon: 'color-palette', color: '#FF9500', desc: 'Image generation' },
-  { id: 'py', name: 'Python Master', icon: 'logo-python', color: '#34C759', desc: 'Scripting & Data' },
-  { id: 'biz', name: 'Biz Strategy', icon: 'briefcase', color: '#5856D6', desc: 'Startup & Business' },
-  { id: 'write', name: 'Content Pro', icon: 'pencil', color: '#FF2D55', desc: 'Blogs & Essays' },
-  { id: 'math', name: 'Math Solver', icon: 'calculator', color: '#FFCC00', desc: 'Equations & Logic' },
-  { id: 'law', name: 'Legal Aide', icon: 'document-text', color: '#8E8E93', desc: 'Documents & Advice' },
-  { id: 'fit', name: 'Health Coach', icon: 'heart', color: '#FF3B30', desc: 'Fitness & Health' },
+const agents = [
+  { id: '1', name: 'General AI', icon: 'chatbubble-ellipses', color: '#007AFF', prompt: 'You are a helpful general assistant.' },
+  { id: '2', name: 'Code Wizard', icon: 'code-slash', color: '#AF52DE', prompt: 'You are an expert software developer. Provide only clean, efficient code.' },
+  { id: '3', name: 'Creative Writer', icon: 'pencil', color: '#FF9500', prompt: 'You are a professional creative writer. Be poetic and descriptive.' },
+  { id: '4', name: 'Prompt Eng', icon: 'color-palette', color: '#FF2D55', prompt: 'You are an expert in writing AI image generation prompts.' },
 ];
 
 const ChatScreen = ({ navigation }) => {
-  const { tokens, isDarkMode } = useContext(AppContext);
+  const { isDarkMode, accentColor, apiKey, updateTokens, tokens } = useContext(AppContext);
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
-  const [selectedTool, setSelectedTool] = useState(aiTools[0]);
-  const scrollRef = useRef();
+  const [selectedAgent, setSelectedAgent] = useState(agents[0]);
+  const [loading, setLoading] = useState(false);
 
-  const handleSend = () => {
-    if (!input.trim()) return;
-    const userMsg = { role: 'user', content: input };
+  const handleSend = async () => {
+    if (!input.trim() || loading) return;
+    if (tokens < 5) {
+      alert("Tokens khatam ho gaye bhai!");
+      return;
+    }
+
+    const userMsg = { id: Date.now(), text: input, sender: 'user' };
     setMessages(prev => [...prev, userMsg]);
     setInput('');
+    setLoading(true);
 
-    // Simulated AI Reply based on selected tool
-    setTimeout(() => {
-      const aiMsg = { 
-        role: 'ai', 
-        content: `Namaste! Main aapka ${selectedTool.name} assistant hoon. Main aapki help karne ke liye taiyar hoon.` 
-      };
+    try {
+      const response = await callOpenRouter(`${selectedAgent.prompt}\nUser: ${input}`, apiKey);
+      const aiMsg = { id: Date.now() + 1, text: response, sender: 'ai' };
       setMessages(prev => [...prev, aiMsg]);
-    }, 1000);
+      updateTokens(-5, `Chat with ${selectedAgent.name}`);
+    } catch (e) {
+      console.log(e);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: isDarkMode ? '#121212' : '#F2F2F7' }]}>
-      <StatusBar barStyle="light-content" />
-      
-      {/* HEADER */}
+    <SafeAreaView style={[styles.container, { backgroundColor: isDarkMode ? '#121212' : '#F8F9FB' }]}>
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Ionicons name="chevron-back" size={24} color="#FFF" />
+          <Ionicons name="arrow-back" size={24} color={isDarkMode ? '#FFF' : '#000'} />
         </TouchableOpacity>
-        <View style={{alignItems: 'center'}}>
-          <Text style={styles.headerTitle}>AI Hub Pro</Text>
-          <Text style={styles.activeTool}>Active: {selectedTool.name}</Text>
-        </View>
-        <Text style={styles.tokenTxt}>⚡ {tokens}</Text>
+        <Text style={[styles.headerTitle, { color: isDarkMode ? '#FFF' : '#000' }]}>{selectedAgent.name}</Text>
       </View>
 
-      {/* 9 TOOLS SELECTOR */}
-      <View style={{ height: 100, paddingVertical: 10 }}>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: 15 }}>
-          {aiTools.map((tool) => (
+      <View style={styles.agentBar}>
+        <FlatList 
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          data={agents}
+          keyExtractor={item => item.id}
+          renderItem={({item}) => (
             <TouchableOpacity 
-              key={tool.id} 
-              style={[
-                styles.toolBtn, 
-                { backgroundColor: selectedTool.id === tool.id ? tool.color : (isDarkMode ? '#1F1F1F' : '#FFF') }
-              ]}
-              onPress={() => setSelectedTool(tool)}
+              onPress={() => setSelectedAgent(item)}
+              style={[styles.agentTab, { borderColor: selectedAgent.id === item.id ? item.color : 'transparent' }]}
             >
-              <Ionicons name={tool.icon} size={22} color={selectedTool.id === tool.id ? '#FFF' : tool.color} />
-              <Text style={[styles.toolName, { color: selectedTool.id === tool.id ? '#FFF' : (isDarkMode ? '#AAA' : '#555') }]}>
-                {tool.name}
-              </Text>
+              <Ionicons name={item.icon} size={18} color={item.color} />
+              <Text style={[styles.agentName, { color: isDarkMode ? '#FFF' : '#333' }]}>{item.name}</Text>
             </TouchableOpacity>
-          ))}
-        </ScrollView>
+          )}
+        />
       </View>
 
       <FlatList 
-        ref={scrollRef}
         data={messages}
-        keyExtractor={(_, i) => i.toString()}
+        keyExtractor={item => item.id.toString()}
         renderItem={({item}) => (
-          <View style={[styles.bubble, item.role === 'user' ? styles.userBubble : styles.aiBubble]}>
-            <Text style={{color: item.role === 'user' ? '#FFF' : '#000'}}>{item.content}</Text>
+          <View style={[styles.msgBox, item.sender === 'user' ? styles.userMsg : styles.aiMsg, { backgroundColor: item.sender === 'user' ? accentColor : (isDarkMode ? '#1F1F1F' : '#FFF') }]}>
+            <Text style={{ color: item.sender === 'user' ? '#FFF' : (isDarkMode ? '#FFF' : '#000') }}>{item.text}</Text>
           </View>
         )}
         contentContainerStyle={{ padding: 20 }}
-        onContentSizeChange={() => scrollRef.current.scrollToEnd()}
       />
 
-      <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"}>
-        <View style={[styles.footer, { backgroundColor: isDarkMode ? '#121212' : '#FFF' }]}>
-          <View style={styles.inputRow}>
-            <TextInput 
-              style={[styles.input, { backgroundColor: isDarkMode ? '#1F1F1F' : '#F0F0F5', color: isDarkMode ? '#FFF' : '#000' }]} 
-              placeholder={`Ask ${selectedTool.name}...`}
-              placeholderTextColor="#888"
-              value={input}
-              onChangeText={setInput}
-            />
-            <TouchableOpacity style={styles.sendBtn} onPress={handleSend}>
-              <Ionicons name="send" size={20} color="#FFF" />
-            </TouchableOpacity>
-          </View>
+      <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+        <View style={[styles.inputContainer, { backgroundColor: isDarkMode ? '#1F1F1F' : '#FFF' }]}>
+          <TextInput 
+            style={[styles.input, { color: isDarkMode ? '#FFF' : '#000' }]}
+            placeholder="Type your message..."
+            placeholderTextColor="#888"
+            value={input}
+            onChangeText={setInput}
+          />
+          <TouchableOpacity onPress={handleSend} disabled={loading}>
+            <Ionicons name="send" size={24} color={accentColor} />
+          </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>
     </SafeAreaView>
@@ -114,19 +103,16 @@ const ChatScreen = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
-  header: { height: 110, backgroundColor: '#1A1A1A', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 20, paddingTop: 40 },
-  headerTitle: { color: '#FFF', fontSize: 18, fontWeight: 'bold' },
-  activeTool: { color: '#B9F6CA', fontSize: 11, fontWeight: 'bold' },
-  tokenTxt: { color: '#FFD700', fontWeight: 'bold' },
-  toolBtn: { paddingHorizontal: 15, paddingVertical: 10, borderRadius: 15, marginRight: 10, alignItems: 'center', justifyContent: 'center', height: 75, width: 90, elevation: 2 },
-  toolName: { fontSize: 10, fontWeight: 'bold', marginTop: 5, textAlign: 'center' },
-  bubble: { padding: 15, borderRadius: 20, marginBottom: 10, maxWidth: '80%' },
-  userBubble: { alignSelf: 'flex-end', backgroundColor: '#007AFF' },
-  aiBubble: { alignSelf: 'flex-start', backgroundColor: '#E5E5EA' },
-  footer: { padding: 15, borderTopWidth: 1, borderTopColor: '#EEE' },
-  inputRow: { flexDirection: 'row', alignItems: 'center' },
-  input: { flex: 1, height: 45, borderRadius: 23, paddingHorizontal: 20, fontSize: 16 },
-  sendBtn: { width: 45, height: 45, borderRadius: 23, backgroundColor: '#007AFF', justifyContent: 'center', alignItems: 'center', marginLeft: 10 }
+  header: { flexDirection: 'row', alignItems: 'center', padding: 20, paddingTop: 40 },
+  headerTitle: { fontSize: 18, fontWeight: 'bold', marginLeft: 15 },
+  agentBar: { paddingVertical: 10, borderBottomWidth: 1, borderBottomColor: '#8882' },
+  agentTab: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 15, paddingVertical: 8, borderRadius: 15, borderWidth: 2, marginHorizontal: 5 },
+  agentName: { marginLeft: 8, fontSize: 12, fontWeight: 'bold' },
+  msgBox: { padding: 15, borderRadius: 20, marginBottom: 10, maxWidth: '80%', elevation: 2 },
+  userMsg: { alignSelf: 'flex-end' },
+  aiMsg: { alignSelf: 'flex-start' },
+  inputContainer: { flexDirection: 'row', alignItems: 'center', padding: 15, borderTopWidth: 1, borderTopColor: '#8882' },
+  input: { flex: 1, fontSize: 16, marginRight: 10 }
 });
 
 export default ChatScreen;
