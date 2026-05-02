@@ -13,7 +13,8 @@
     "@react-native-voice/voice": "^3.2.4",
     "@react-navigation/bottom-tabs": "^7.15.11",
     "dotenv": "^16.0.3",
-    "expo": "^55.0.19"
+    "expo": "^55.0.19",
+    "expo-speech": "~55.0.13"
   },
   "engines": {
     "node": ">=14.0.0"
