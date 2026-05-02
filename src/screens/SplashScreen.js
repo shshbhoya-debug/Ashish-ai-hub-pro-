@@ -14,7 +14,7 @@ const SplashScreen = ({ navigation }) => {
 
     // 3 second baad Home screen par bhej dega
     setTimeout(() => {
-      navigation.replace('Home');
+      navigation.replace('Login');
     }, 3000);
   }, []);
 
