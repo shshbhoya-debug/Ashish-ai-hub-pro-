@@ -9,9 +9,10 @@
     "build": "echo 'Static site with Node backend'"
   },
   "dependencies": {
-    "dotenv": "^16.0.3"
+    "@react-native-async-storage/async-storage": "^2.2.0",
+    "dotenv": "^16.0.3",
+    "expo": "^55.0.19"
   },
-  "devDependencies": {},
   "engines": {
     "node": ">=14.0.0"
   }
