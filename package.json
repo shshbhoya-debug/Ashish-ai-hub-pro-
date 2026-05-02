@@ -16,6 +16,7 @@
     "expo": "^55.0.19",
     "expo-image-picker": "~55.0.19",
     "expo-speech": "~55.0.13",
+    "react-native-markdown-display": "^7.0.2",
     "react-native-webview": "13.16.0"
   },
   "engines": {
