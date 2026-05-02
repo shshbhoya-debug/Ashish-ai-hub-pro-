@@ -1,75 +1,72 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { 
   View, Text, TextInput, TouchableOpacity, StyleSheet, 
-  SafeAreaView, FlatList, KeyboardAvoidingView, Platform, StatusBar 
+  SafeAreaView, FlatList, KeyboardAvoidingView, Platform, 
+  StatusBar, Animated 
 } from 'react-native';
-import { Ionicons } from '@expo/vector-icons'; // Standard Expo Icons
+import { Ionicons } from '@expo/vector-icons';
 
 const ChatScreen = () => {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
+  const scrollRef = useRef();
 
   const renderMessage = ({ item }) => (
-    <View style={[styles.msgWrapper, item.role === 'user' ? styles.userWrapper : styles.aiWrapper]}>
+    <Animated.View style={[styles.msgWrapper, item.role === 'user' ? styles.userWrapper : styles.aiWrapper]}>
       <View style={[styles.bubble, item.role === 'user' ? styles.userBubble : styles.aiBubble]}>
         <Text style={[styles.msgText, { color: item.role === 'user' ? '#fff' : '#1A1A1A' }]}>
           {item.content}
         </Text>
       </View>
-      <Text style={styles.timeText}>1:41 PM</Text>
-    </View>
+      <Text style={styles.timeText}>Just now</Text>
+    </Animated.View>
   );
 
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor="#007AFF" />
       
-      {/* --- MODERN HEADER --- */}
+      {/* --- HEADER --- */}
       <View style={styles.header}>
-        <TouchableOpacity style={styles.headerBtn}>
-          <Ionicons name="chevron-back" size={24} color="#fff" />
-        </TouchableOpacity>
-        <View style={styles.headerCenter}>
-          <Text style={styles.headerTitle}>Ashish AI Pro</Text>
-          <View style={styles.statusRow}>
-            <View style={styles.dot} /><Text style={styles.statusText}>Active Now</Text>
+        <View style={styles.headerInfo}>
+          <View style={styles.profilePic}><Text style={styles.profileText}>A</Text></View>
+          <View style={{marginLeft: 10}}>
+            <Text style={styles.headerTitle}>Ashish AI Hub</Text>
+            <Text style={styles.headerStatus}>● Online</Text>
           </View>
         </View>
-        <TouchableOpacity style={styles.headerBtn}>
-          <Ionicons name="settings-outline" size={22} color="#fff" />
-        </TouchableOpacity>
+        <TouchableOpacity><Ionicons name="ellipsis-vertical" size={20} color="#fff" /></TouchableOpacity>
       </View>
 
       <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={{flex: 1}}>
         <FlatList 
+          ref={scrollRef}
           data={messages}
           renderItem={renderMessage}
           keyExtractor={(item, index) => index.toString()}
           contentContainerStyle={{padding: 20}}
+          onContentSizeChange={() => scrollRef.current.scrollToEnd()}
           ListEmptyComponent={() => (
-            <View style={styles.emptyContainer}>
-              <Ionicons name="sparkles" size={60} color="#E3F2FD" />
-              <Text style={styles.welcomeTxt}>Hello Ashish!</Text>
-              <Text style={styles.subTxt}>Main aapki kaise madad kar sakta hoon?</Text>
+            <View style={styles.empty}>
+              <Ionicons name="chatbubble-ellipses-outline" size={80} color="#D1E9FF" />
+              <Text style={styles.emptyTitle}>Chalo shuru karte hain!</Text>
+              <Text style={styles.emptySub}>Ashish AI Hub Pro aapki madad ke liye taiyar hai.</Text>
             </View>
           )}
         />
 
-        {/* --- SMART INPUT AREA --- */}
-        <View style={styles.inputContainer}>
-          <View style={styles.innerInput}>
-            <TouchableOpacity style={styles.actionBtn}>
-              <Ionicons name="add" size={24} color="#007AFF" />
-            </TouchableOpacity>
+        {/* --- GLASS DESIGN INPUT --- */}
+        <View style={styles.inputArea}>
+          <View style={styles.glassInput}>
             <TextInput 
               style={styles.textInput} 
-              placeholder="Ask anything..." 
-              placeholderTextColor="#999"
+              placeholder="Ask me something..." 
+              placeholderTextColor="#90A4AE"
               value={input}
               onChangeText={setInput}
             />
             <TouchableOpacity 
-              style={[styles.sendCircle, { backgroundColor: input ? '#007AFF' : '#B0BEC5' }]} 
+              style={[styles.sendBtn, {backgroundColor: input ? '#007AFF' : '#CFD8DC'}]}
               onPress={() => {
                 if(input) {
                   setMessages([...messages, {role: 'user', content: input}]);
@@ -87,36 +84,37 @@ const ChatScreen = () => {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#F5F7FA' },
+  container: { flex: 1, backgroundColor: '#F0F4F8' },
   header: { 
-    height: 80, backgroundColor: '#007AFF', flexDirection: 'row', 
-    alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 15,
-    paddingTop: 10, elevation: 5
+    height: 90, backgroundColor: '#007AFF', flexDirection: 'row', 
+    alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 20, paddingTop: 30
   },
-  headerTitle: { color: '#fff', fontSize: 20, fontWeight: 'bold' },
-  statusRow: { flexDirection: 'row', alignItems: 'center', marginTop: 2 },
-  dot: { width: 6, height: 6, borderRadius: 3, backgroundColor: '#4CAF50', marginRight: 5 },
-  statusText: { color: '#E3F2FD', fontSize: 11 },
-  emptyContainer: { flex: 1, alignItems: 'center', marginTop: 100 },
-  welcomeTxt: { fontSize: 24, fontWeight: 'bold', color: '#1A1A1A', marginTop: 15 },
-  subTxt: { fontSize: 14, color: '#78909C', marginTop: 5 },
-  msgWrapper: { marginBottom: 15, maxWidth: '80%' },
+  headerInfo: { flexDirection: 'row', alignItems: 'center' },
+  profilePic: { width: 40, height: 40, borderRadius: 20, backgroundColor: 'rgba(255,255,255,0.2)', justifyContent: 'center', alignItems: 'center' },
+  profileText: { color: '#fff', fontWeight: 'bold', fontSize: 18 },
+  headerTitle: { color: '#fff', fontSize: 18, fontWeight: 'bold' },
+  headerStatus: { color: '#B9F6CA', fontSize: 11, fontWeight: '600' },
+  
+  empty: { flex: 1, alignItems: 'center', marginTop: 100 },
+  emptyTitle: { fontSize: 20, fontWeight: 'bold', color: '#455A64', marginTop: 20 },
+  emptySub: { fontSize: 14, color: '#90A4AE', textAlign: 'center', paddingHorizontal: 40, marginTop: 5 },
+
+  msgWrapper: { marginBottom: 15, maxWidth: '85%' },
   userWrapper: { alignSelf: 'flex-end', alignItems: 'flex-end' },
   aiWrapper: { alignSelf: 'flex-start', alignItems: 'flex-start' },
-  bubble: { padding: 14, borderRadius: 20, elevation: 1 },
+  bubble: { padding: 14, borderRadius: 22, shadowColor: '#000', shadowOffset: {width: 0, height: 1}, shadowOpacity: 0.1, elevation: 2 },
   userBubble: { backgroundColor: '#007AFF', borderBottomRightRadius: 2 },
   aiBubble: { backgroundColor: '#fff', borderBottomLeftRadius: 2 },
-  msgText: { fontSize: 15, lineHeight: 22 },
-  timeText: { fontSize: 10, color: '#90A4AE', marginTop: 4 },
-  inputContainer: { padding: 15, backgroundColor: 'transparent' },
-  innerInput: { 
+  msgText: { fontSize: 16, lineHeight: 22 },
+  timeText: { fontSize: 10, color: '#90A4AE', marginTop: 5 },
+
+  inputArea: { padding: 15, backgroundColor: 'transparent' },
+  glassInput: { 
     flexDirection: 'row', backgroundColor: '#fff', borderRadius: 30, 
-    alignItems: 'center', paddingHorizontal: 10, height: 55,
-    shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.1, shadowRadius: 5, elevation: 3
+    padding: 8, alignItems: 'center', elevation: 4, shadowOpacity: 0.1
   },
-  textInput: { flex: 1, height: '100%', color: '#000', fontSize: 16, paddingHorizontal: 10 },
-  sendCircle: { width: 40, height: 40, borderRadius: 20, justifyContent: 'center', alignItems: 'center' },
-  actionBtn: { padding: 5 }
+  textInput: { flex: 1, paddingHorizontal: 15, fontSize: 16, color: '#263238' },
+  sendBtn: { width: 45, height: 45, borderRadius: 22.5, justifyContent: 'center', alignItems: 'center' }
 });
 
 export default ChatScreen;
