@@ -28,7 +28,6 @@ const HomeScreen = ({ navigation }) => {
       </View>
 
       <ScrollView contentContainerStyle={{ padding: 20 }}>
-        {/* Subtle Reward Reminder (Not a big card) */}
         {!isClaimed && (
           <TouchableOpacity 
             style={[styles.miniReward, { borderColor: accentColor + '40' }]} 
@@ -42,18 +41,29 @@ const HomeScreen = ({ navigation }) => {
 
         <Text style={[styles.sectionTitle, { color: isDarkMode ? '#AAA' : '#444' }]}>AI POWERED TOOLS</Text>
         
-        <View style={styles.mainTool}>
-          <TouchableOpacity 
-            style={[styles.heroCard, { backgroundColor: accentColor }]}
-            onPress={() => navigation.navigate('ChatScreen')}
-          >
-            <View>
-              <Text style={styles.heroTitle}>Multi-Agent Chat</Text>
-              <Text style={styles.heroSub}>Talk to specialist AI models</Text>
-            </View>
-            <Ionicons name="chatbubble-ellipses" size={40} color="#FFF" />
-          </TouchableOpacity>
-        </View>
+        {/* Main Chat Hero */}
+        <TouchableOpacity 
+          style={[styles.heroCard, { backgroundColor: accentColor }]}
+          onPress={() => navigation.navigate('ChatScreen')}
+        >
+          <View>
+            <Text style={styles.heroTitle}>Multi-Agent Chat</Text>
+            <Text style={styles.heroSub}>Talk to specialist AI models</Text>
+          </View>
+          <Ionicons name="chatbubbles" size={40} color="#FFF" />
+        </TouchableOpacity>
+
+        {/* NEW: Universal Solver Card */}
+        <TouchableOpacity 
+          style={[styles.heroCard, { backgroundColor: isDarkMode ? '#1F1F1F' : '#FFF', borderWidth: 1, borderColor: accentColor + '40', marginTop: -5 }]}
+          onPress={() => navigation.navigate('EducationScreen')}
+        >
+          <View>
+            <Text style={[styles.heroTitle, { color: isDarkMode ? '#FFF' : '#000', fontSize: 18 }]}>Universal Solver</Text>
+            <Text style={[styles.heroSub, { color: '#888' }]}>Math, Science, UPSC & more</Text>
+          </View>
+          <Ionicons name="school" size={35} color={accentColor} />
+        </TouchableOpacity>
 
         <View style={styles.grid}>
           <TouchableOpacity style={[styles.smallCard, { backgroundColor: isDarkMode ? '#1F1F1F' : '#FFF' }]} onPress={() => navigation.navigate('ArchitectScreen')}>
@@ -61,9 +71,9 @@ const HomeScreen = ({ navigation }) => {
             <Text style={[styles.cardLabel, { color: isDarkMode ? '#FFF' : '#000' }]}>Architect</Text>
           </TouchableOpacity>
           
-          <TouchableOpacity style={[styles.smallCard, { backgroundColor: isDarkMode ? '#1F1F1F' : '#FFF' }]} onPress={() => navigation.navigate('ImageGenScreen')}>
-            <Ionicons name="color-palette-outline" size={24} color="#FF2D55" />
-            <Text style={[styles.cardLabel, { color: isDarkMode ? '#FFF' : '#000' }]}>Image Lab</Text>
+          <TouchableOpacity style={[styles.smallCard, { backgroundColor: isDarkMode ? '#1F1F1F' : '#FFF' }]} onPress={() => navigation.navigate('ExploreScreen')}>
+            <Ionicons name="compass-outline" size={24} color="#FF9500" />
+            <Text style={[styles.cardLabel, { color: isDarkMode ? '#FFF' : '#000' }]}>Explore</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
@@ -76,12 +86,12 @@ const styles = StyleSheet.create({
   header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: 20, paddingTop: 40 },
   greeting: { color: '#888', fontSize: 12, textTransform: 'uppercase', letterSpacing: 1 },
   userName: { fontSize: 22, fontWeight: 'bold' },
-  tokenStatusBar: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 12, paddingVertical: 6, borderRadius: 20, elevation: 2, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.1, shadowRadius: 4 },
+  tokenStatusBar: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 12, paddingVertical: 6, borderRadius: 20, elevation: 2 },
   tokenText: { marginLeft: 5, fontWeight: 'bold', fontSize: 14 },
-  miniReward: { flexDirection: 'row', alignItems: 'center', padding: 15, borderRadius: 15, borderWidth: 1, marginBottom: 25, backgroundColor: 'transparent' },
+  miniReward: { flexDirection: 'row', alignItems: 'center', padding: 15, borderRadius: 15, borderWidth: 1, marginBottom: 25 },
   miniRewardText: { flex: 1, marginLeft: 10, fontWeight: '600', fontSize: 13 },
   sectionTitle: { fontSize: 12, fontWeight: '800', marginBottom: 15, letterSpacing: 1.5 },
-  heroCard: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: 25, borderRadius: 25, marginBottom: 15 },
+  heroCard: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: 25, borderRadius: 25, marginBottom: 15, elevation: 2 },
   heroTitle: { color: '#FFF', fontSize: 20, fontWeight: 'bold' },
   heroSub: { color: 'rgba(255,255,255,0.7)', fontSize: 12, marginTop: 5 },
   grid: { flexDirection: 'row', justifyContent: 'space-between' },
