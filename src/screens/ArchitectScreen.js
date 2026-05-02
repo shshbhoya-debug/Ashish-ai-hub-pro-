@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { 
   View, Text, StyleSheet, SafeAreaView, TextInput, 
-  TouchableOpacity, ScrollView, Alert, ActivityIndicator 
+  TouchableOpacity, ScrollView, Alert, ActivityIndicator, Share 
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { AppContext } from '../context/AppContext';
@@ -21,6 +21,26 @@ const ArchitectScreen = ({ navigation }) => {
   const [prompt, setPrompt] = useState('');
   const [loading, setLoading] = useState(false);
   const [generatedScript, setGeneratedScript] = useState('');
+
+  const handleShare = async () => {
+    try {
+      const result = await Share.share({
+        message: generatedScript,
+        title: 'Project Script from Ashish AI Hub Pro',
+      });
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+          // shared with activity type of result.activityType
+        } else {
+          // shared
+        }
+      } else if (result.action === Share.dismissedAction) {
+        // dismissed
+      }
+    } catch (error) {
+      Alert.alert(error.message);
+    }
+  };
 
   const generateProject = async (customPrompt = prompt) => {
     const finalPrompt = customPrompt || prompt;
@@ -52,11 +72,11 @@ const ArchitectScreen = ({ navigation }) => {
     <SafeAreaView style={[styles.container, { backgroundColor: isDarkMode ? '#121212' : '#F8F9FB' }]}>
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()}><Ionicons name="arrow-back" size={24} color={isDarkMode ? '#FFF' : '#000'} /></TouchableOpacity>
-        <Text style={[styles.headerTitle, { color: isDarkMode ? '#FFF' : '#000' }]}>AI Architect Templates</Text>
+        <Text style={[styles.headerTitle, { color: isDarkMode ? '#FFF' : '#000' }]}>AI Project Architect</Text>
       </View>
 
       <ScrollView contentContainerStyle={{ padding: 20 }}>
-        <Text style={[styles.sectionTitle, { color: isDarkMode ? '#FFF' : '#333' }]}>Select a Template</Text>
+        <Text style={[styles.sectionTitle, { color: isDarkMode ? '#FFF' : '#333' }]}>Templates</Text>
         <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.templateRow}>
           {templates.map(item => (
             <TouchableOpacity 
@@ -84,6 +104,13 @@ const ArchitectScreen = ({ navigation }) => {
 
         {generatedScript ? (
           <View style={styles.resultArea}>
+            <View style={styles.resultHeader}>
+              <Text style={styles.resultLabel}>Script Ready</Text>
+              <TouchableOpacity onPress={handleShare} style={styles.shareBtn}>
+                <Ionicons name="share-social" size={20} color="#007AFF" />
+                <Text style={styles.shareTxt}> Share</Text>
+              </TouchableOpacity>
+            </View>
             <View style={styles.codeBox}><Text style={styles.codeText}>{generatedScript}</Text></View>
           </View>
         ) : null}
@@ -105,6 +132,10 @@ const styles = StyleSheet.create({
   buildBtn: { backgroundColor: '#FFD700', marginTop: 20, padding: 20, borderRadius: 20, alignItems: 'center' },
   buildText: { fontWeight: 'bold', fontSize: 16 },
   resultArea: { marginTop: 30 },
+  resultHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 },
+  resultLabel: { fontWeight: 'bold', color: '#4CD964' },
+  shareBtn: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#007AFF15', paddingHorizontal: 12, paddingVertical: 6, borderRadius: 10 },
+  shareTxt: { color: '#007AFF', fontWeight: 'bold', fontSize: 14 },
   codeBox: { backgroundColor: '#1A1A1A', padding: 15, borderRadius: 15 },
   codeText: { color: '#00FF00', fontFamily: 'monospace', fontSize: 11 }
 });
