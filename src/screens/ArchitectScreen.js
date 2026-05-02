@@ -61,6 +61,10 @@ const ArchitectScreen = ({ navigation }) => {
       const script = await callOpenRouter(`${systemPrompt}\n\nRequest: ${finalPrompt}`, apiKey);
       setGeneratedScript(script.replace(/\`\`\`bash/g, '').replace(/\`\`\`/g, '').trim());
       updateTokens(-50, `Architected: ${finalPrompt.substring(0, 15)}...`);
+      const newProj = { id: Date.now().toString(), title: finalPrompt.substring(0, 20), script: script, date: new Date().toLocaleString() };
+      const saved = await AsyncStorage.getItem('saved_projects');
+      const projs = saved ? JSON.parse(saved) : [];
+      await AsyncStorage.setItem('saved_projects', JSON.stringify([newProj, ...projs]));
     } catch (e) {
       Alert.alert("Error", "AI respond nahi kar raha.");
     } finally {
