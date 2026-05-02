@@ -1,82 +1,72 @@
-import React, { useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Ionicons } from '@expo/vector-icons';
-import { AppProvider, AppContext } from './src/context/AppContext';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // Screens
-import SplashScreen from './src/screens/SplashScreen';
-import ArchitectScreen from './src/screens/ArchitectScreen';
 import OnboardingScreen from './src/screens/OnboardingScreen';
 import LoginScreen from './src/screens/LoginScreen';
-import HomeScreen from './src/screens/HomeScreen';
+import MainTabs from './src/navigation/MainTabs';
 import ChatScreen from './src/screens/ChatScreen';
-import ImageGenScreen from './src/screens/ImageGenScreen';
 import WalletScreen from './src/screens/WalletScreen';
 import ProfileScreen from './src/screens/ProfileScreen';
-import GamingScreen from './src/screens/GamingScreen';
-import SettingsScreen from './src/screens/SettingsScreen';
+import HistoryScreen from './src/screens/HistoryScreen';
+import ArchitectScreen from './src/screens/ArchitectScreen';
+import ProjectDetailScreen from './src/screens/ProjectDetailScreen';
+import DevSettingsScreen from './src/screens/DevSettingsScreen';
+import PreviewScreen from './src/screens/PreviewScreen';
+import SecurityScreen from './src/screens/SecurityScreen';
 import SupportScreen from './src/screens/SupportScreen';
+import WalletHistoryScreen from './src/screens/WalletHistoryScreen';
+import LockScreen from './src/screens/LockScreen';
+
+import { AppProvider } from './src/context/AppContext';
 
 const Stack = createStackNavigator();
-const Tab = createBottomTabNavigator();
-
-function MainTabs() {
-  const { isDarkMode } = useContext(AppContext);
-  
-  return (
-    <Tab.Navigator
-      screenOptions={({ route }) => ({
-        headerShown: false,
-        tabBarStyle: { 
-          backgroundColor: isDarkMode ? '#1A1A1A' : '#FFF',
-          borderTopWidth: 0,
-          elevation: 10,
-          height: 65,
-          paddingBottom: 10
-        },
-        tabBarActiveTintColor: '#007AFF',
-        tabBarInactiveTintColor: '#8E8E93',
-        tabBarIcon: ({ focused, color, size }) => {
-          let iconName;
-          if (route.name === 'Home') iconName = focused ? 'home' : 'home-outline';
-          else if (route.name === 'Chat') iconName = focused ? 'chatbubbles' : 'chatbubbles-outline';
-          else if (route.name === 'Art') iconName = focused ? 'image' : 'image-outline';
-          else if (route.name === 'Wallet') iconName = focused ? 'wallet' : 'wallet-outline';
-          else if (route.name === 'Profile') iconName = focused ? 'person' : 'person-outline';
-          return <Ionicons name={iconName} size={24} color={color} />;
-        },
-      })}
-    >
-      <Tab.Screen name="Home" component={HomeScreen} />
-      <Tab.Screen name="Chat" component={ChatScreen} />
-      <Tab.Screen name="Art" component={ImageGenScreen} />
-      <Tab.Screen name="Wallet" component={WalletScreen} />
-      <Tab.Screen name="Profile" component={ProfileScreen} />
-    </Tab.Navigator>
-  );
-}
 
 export default function App() {
+  const [isLocked, setIsLocked] = useState(false);
+  const [checkingLock, setCheckingLock] = useState(true);
+
+  useEffect(() => {
+    checkAppLock();
+  }, []);
+
+  const checkAppLock = async () => {
+    const pin = await AsyncStorage.getItem('app_pin');
+    if (pin) {
+      setIsLocked(true); // Agar PIN hai toh lock dikhao
+    } else {
+      setIsLocked(false); // Warna seedha entry
+    }
+    setCheckingLock(false);
+  };
+
+  if (checkingLock) return null; // Splash screen ya loading dikha sakte hain
+
   return (
     <AppProvider>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="Splash" screenOptions={{ headerShown: false }}>
-          <Stack.Screen name="Splash" component={SplashScreen} />
-        <Stack.Screen name="Onboarding" component={OnboardingScreen} />
-          <Stack.Screen name="Login" component={LoginScreen} />
-          <Stack.Screen name="Main" component={MainTabs} />
-          {/* Other screens that are not in tabs */}
-          <Stack.Screen name="GamingScreen" component={GamingScreen} />
-          <Stack.Screen name="SettingsScreen" component={SettingsScreen} />
-          <Stack.Screen name="SupportScreen" component={SupportScreen} />
-          <Stack.Screen name="ArchitectScreen" component={ArchitectScreen} />
-          <Stack.Screen name="ChatScreen" component={ChatScreen} />
-          <Stack.Screen name="ImageGenScreen" component={ImageGenScreen} />
-          <Stack.Screen name="WalletScreen" component={WalletScreen} />
-          <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
-        </Stack.Navigator>
+        {isLocked ? (
+          <LockScreen onUnlock={() => setIsLocked(false)} />
+        ) : (
+          <Stack.Navigator screenOptions={{ headerShown: false }}>
+            <Stack.Screen name="Onboarding" component={OnboardingScreen} />
+            <Stack.Screen name="Login" component={LoginScreen} />
+            <Stack.Screen name="Main" component={MainTabs} />
+            <Stack.Screen name="ChatScreen" component={ChatScreen} />
+            <Stack.Screen name="WalletScreen" component={WalletScreen} />
+            <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
+            <Stack.Screen name="HistoryScreen" component={HistoryScreen} />
+            <Stack.Screen name="ArchitectScreen" component={ArchitectScreen} />
+            <Stack.Screen name="ProjectDetailScreen" component={ProjectDetailScreen} />
+            <Stack.Screen name="DevSettingsScreen" component={DevSettingsScreen} />
+            <Stack.Screen name="PreviewScreen" component={PreviewScreen} />
+            <Stack.Screen name="SecurityScreen" component={SecurityScreen} />
+            <Stack.Screen name="SupportScreen" component={SupportScreen} />
+            <Stack.Screen name="WalletHistoryScreen" component={WalletHistoryScreen} />
+          </Stack.Navigator>
+        )}
       </NavigationContainer>
     </AppProvider>
   );
