@@ -1,32 +1,49 @@
-const API_KEY = process.env.EXPO_PUBLIC_OPENROUTER_API_KEY;
-
-export const askAI = async (prompt, agentType = "general") => {
-  // Har agent ke liye alag personality
-  const systemPrompts = {
-    coding: "You are an expert software engineer. Provide only clean, working code with brief explanations.",
-    essay: "You are a professional academic writer. Write formal, well-structured essays with references.",
-    image: "You are a creative prompt engineer. Convert simple ideas into highly detailed 4K image prompts.",
-    general: "You are a helpful and witty AI assistant named Ashish AI Pro."
-  };
-
+export const callOpenRouter = async (prompt, apiKey, model = "google/gemini-2.0-flash-001") => {
   try {
     const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
       method: "POST",
       headers: {
-        "Authorization": `Bearer ${API_KEY}`,
-        "Content-Type": "application/json"
+        "Authorization": `Bearer ${apiKey}`,
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        "model": "google/gemini-2.0-flash-exp:free",
-        "messages": [
-          { "role": "system", "content": systemPrompts[agentType] || systemPrompts.general },
-          { "role": "user", "content": prompt }
-        ]
+        "model": model,
+        "messages": [{"role": "user", "content": prompt}],
       })
     });
     const data = await response.json();
     return data.choices[0].message.content;
   } catch (error) {
-    return "Error: System slow hai, thodi der baad try karein.";
+    console.error("AI Error:", error);
+    return "AI connect nahi ho pa raha hai.";
+  }
+};
+
+export const generateAIImage = async (prompt, apiKey) => {
+  try {
+    const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${apiKey}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        "model": "together/flux-schnell", // High-speed high-quality image model
+        "messages": [
+          {
+            "role": "user",
+            "content": [
+              { "type": "text", "text": prompt }
+            ]
+          }
+        ]
+      })
+    });
+    const data = await response.json();
+    // Note: Image models often return a URL or base64 in a specific format
+    return data.choices[0].message.content; 
+  } catch (error) {
+    console.error("Image Gen Error:", error);
+    return null;
   }
 };
