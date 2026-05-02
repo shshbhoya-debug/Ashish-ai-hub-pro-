@@ -1,40 +1,41 @@
 import React from 'react';
+import { View, Text, StyleSheet, SafeAreaView, TouchableOpacity, TextInput } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 
-const SupportScreen = () => {
+const SupportScreen = ({ navigation }) => {
   return (
-    <div style={{ padding: '20px', fontFamily: 'Arial', textAlign: 'center' }}>
-      <h2 style={{ color: '#075e54' }}>Help & Support 📞</h2>
-      <p style={{ color: '#666' }}>Humein aapki madad karke khushi hogi!</p>
-      
-      <div style={{ marginTop: '30px', textAlign: 'left' }}>
-        <div style={cardStyle}>
-          <strong>📧 Email Us</strong>
-          <p style={{ margin: '5px 0', fontSize: '14px' }}>support@ashishaihub.pro</p>
-        </div>
+    <SafeAreaView style={styles.container}>
+      <View style={styles.header}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <Ionicons name="arrow-back" size={24} color="#1A1A1A" />
+        </TouchableOpacity>
+        <Text style={styles.headerTitle}>Help & Support</Text>
+      </View>
+      <View style={styles.content}>
+        <Ionicons name="headset-outline" size={80} color="#007AFF" style={{alignSelf: 'center', marginBottom: 20}} />
+        <Text style={styles.title}>How can we help?</Text>
+        <Text style={styles.sub}>Submit a ticket and our AI team will get back to you.</Text>
         
-        <div style={cardStyle}>
-          <strong>🌐 Website</strong>
-          <p style={{ margin: '5px 0', fontSize: '14px' }}>www.ashishaihub.pro</p>
-        </div>
-
-        <div style={{ ...cardStyle, backgroundColor: '#e3f2fd' }}>
-          <strong>❓ FAQs</strong>
-          <p style={{ margin: '5px 0', fontSize: '14px' }}>AI Tokens kaise buy karein?</p>
-          <p style={{ margin: '5px 0', fontSize: '14px' }}>Image download kaise karein?</p>
-        </div>
-      </div>
-      
-      <p style={{ marginTop: '30px', fontSize: '12px', color: '#aaa' }}>Made with ❤️ by Ashish Developer</p>
-    </div>
+        <TextInput style={styles.input} placeholder="Subject" />
+        <TextInput style={[styles.input, {height: 120}]} placeholder="Describe your issue..." multiline />
+        
+        <TouchableOpacity style={styles.sendBtn}>
+          <Text style={styles.sendTxt}>Submit Ticket</Text>
+        </TouchableOpacity>
+      </View>
+    </SafeAreaView>
   );
 };
 
-const cardStyle = {
-  padding: '15px',
-  backgroundColor: '#f9f9f9',
-  borderRadius: '12px',
-  marginBottom: '15px',
-  border: '1px solid #eee'
-};
-
+const styles = StyleSheet.create({
+  container: { flex: 1, backgroundColor: '#FFF' },
+  header: { flexDirection: 'row', alignItems: 'center', padding: 20, borderBottomWidth: 1, borderBottomColor: '#EEE' },
+  headerTitle: { fontSize: 18, fontWeight: 'bold', marginLeft: 15 },
+  content: { padding: 25 },
+  title: { fontSize: 22, fontWeight: 'bold', textAlign: 'center' },
+  sub: { textAlign: 'center', color: '#666', marginTop: 10, marginBottom: 30 },
+  input: { backgroundColor: '#F5F7FA', padding: 15, borderRadius: 12, marginBottom: 15 },
+  sendBtn: { backgroundColor: '#007AFF', padding: 18, borderRadius: 12, alignItems: 'center', marginTop: 10 },
+  sendTxt: { color: '#FFF', fontWeight: 'bold' }
+});
 export default SupportScreen;
