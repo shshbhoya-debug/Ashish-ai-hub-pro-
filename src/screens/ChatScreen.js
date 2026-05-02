@@ -5,136 +5,98 @@ import {
   StatusBar, Animated, Alert 
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import Voice from '@react-native-voice/voice';
 import { AppContext } from '../context/AppContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const AnimatedMessage = ({ item }) => {
-  const slideAnim = useRef(new Animated.Value(20)).current;
-  const opacityAnim = useRef(new Animated.Value(0)).current;
-
-  useEffect(() => {
-    Animated.parallel([
-      Animated.timing(slideAnim, { toValue: 0, duration: 400, useNativeDriver: true }),
-      Animated.timing(opacityAnim, { toValue: 1, duration: 400, useNativeDriver: true })
-    ]).start();
-  }, []);
-
-  return (
-    <Animated.View style={[
-      styles.msgWrapper, 
-      item.role === 'user' ? styles.userWrapper : styles.aiWrapper,
-      { opacity: opacityAnim, transform: [{ translateY: slideAnim }] }
-    ]}>
-      <View style={[styles.bubble, item.role === 'user' ? styles.userBubble : styles.aiBubble]}>
-        <Text style={[styles.msgText, { color: item.role === 'user' ? '#fff' : '#1A1A1A' }]}>
-          {item.content}
-        </Text>
-      </View>
-    </Animated.View>
-  );
-};
-
 const ChatScreen = ({ navigation }) => {
-  const { tokens, isDarkMode } = useContext(AppContext);
+  const { tokens, isDarkMode, saveChat } = useContext(AppContext);
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
+  const [isListening, setIsListening] = useState(false);
   const scrollRef = useRef();
 
-  // Load chat history on start
   useEffect(() => {
-    loadChatHistory();
+    // Voice event listeners
+    Voice.onSpeechStart = () => setIsListening(true);
+    Voice.onSpeechEnd = () => setIsListening(false);
+    Voice.onSpeechResults = (e) => {
+      if (e.value && e.value.length > 0) {
+        setInput(e.value[0]); // Jo bola wo input mein set ho jayega
+      }
+    };
+
+    return () => {
+      Voice.destroy().then(Voice.removeAllListeners);
+    };
   }, []);
 
-  const loadChatHistory = async () => {
+  const startListening = async () => {
     try {
-      const savedChat = await AsyncStorage.getItem('chat_history');
-      if (savedChat !== null) {
-        setMessages(JSON.parse(savedChat));
-      }
+      await Voice.start('en-US'); // 'hi-IN' for Hindi support
     } catch (e) {
-      console.error("Failed to load chat", e);
+      console.error(e);
     }
   };
 
-  const saveChat = async (newMessages) => {
+  const stopListening = async () => {
     try {
-      await AsyncStorage.setItem('chat_history', JSON.stringify(newMessages));
+      await Voice.stop();
+      setIsListening(false);
     } catch (e) {
-      console.error("Failed to save chat", e);
+      console.error(e);
     }
   };
 
   const handleSend = () => {
     if (!input.trim()) return;
-    
     const newMsg = { role: 'user', content: input };
-    const updatedMessages = [...messages, newMsg];
-    
-    setMessages(updatedMessages);
-    saveChat(updatedMessages); // Save to storage
+    setMessages(prev => [...prev, newMsg]);
     setInput('');
-
-    // Simulated AI Reply
-    setTimeout(() => {
-      const aiReply = { role: 'ai', content: "Ye message history mein save ho gaya hai! Aap app band karke check kar sakte hain. ✨" };
-      const withAiReply = [...updatedMessages, aiReply];
-      setMessages(withAiReply);
-      saveChat(withAiReply);
-    }, 1000);
-  };
-
-  const clearChat = () => {
-    Alert.alert("Clear Chat?", "Kya aap saari baatcheet delete karna chahte hain?", [
-      { text: "No" },
-      { text: "Yes", onPress: async () => {
-          setMessages([]);
-          await AsyncStorage.removeItem('chat_history');
-      }}
-    ]);
+    // Save logic yahan aayega
   };
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: isDarkMode ? '#121212' : '#FAFAFA' }]}>
-      <StatusBar barStyle="light-content" />
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Ionicons name="chevron-back" size={24} color="#fff" />
-        </TouchableOpacity>
-        <View style={{alignItems: 'center'}}>
-          <Text style={styles.headerTitle}>AI Chat Memory</Text>
-          <Text style={styles.tokenCount}>⚡ {tokens} Tokens Available</Text>
-        </View>
-        <TouchableOpacity onPress={clearChat}>
-          <Ionicons name="trash-outline" size={22} color="#FFCDD2" />
-        </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.goBack()}><Ionicons name="chevron-back" size={24} color="#fff" /></TouchableOpacity>
+        <Text style={styles.headerTitle}>AI Voice Chat</Text>
+        <Text style={styles.tokenCount}>⚡ {tokens}</Text>
       </View>
 
-      <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={{flex: 1}}>
-        <FlatList 
-          ref={scrollRef}
-          data={messages}
-          renderItem={({item}) => <AnimatedMessage item={item} />}
-          keyExtractor={(item, index) => index.toString()}
-          contentContainerStyle={{padding: 20}}
-          onContentSizeChange={() => scrollRef.current.scrollToEnd({animated: true})}
-          ListEmptyComponent={() => (
-            <View style={styles.empty}>
-              <Text style={styles.emptyTitle}>Chat History is Empty</Text>
-              <Text style={styles.emptySub}>Yahan jo bhi baatcheet hogi, wo save rahegi.</Text>
-            </View>
-          )}
-        />
-        <View style={[styles.footer, { backgroundColor: isDarkMode ? '#121212' : '#FAFAFA' }]}>
-          <View style={[styles.inputCard, { backgroundColor: isDarkMode ? '#1F1F1F' : '#FFF', borderColor: isDarkMode ? '#333' : '#ECEFF1' }]}>
+      <FlatList 
+        data={messages}
+        keyExtractor={(_, index) => index.toString()}
+        renderItem={({item}) => (
+          <View style={[styles.bubble, item.role === 'user' ? styles.userBubble : styles.aiBubble]}>
+            <Text style={{color: item.role === 'user' ? '#fff' : '#000'}}>{item.content}</Text>
+          </View>
+        )}
+        contentContainerStyle={{padding: 20}}
+      />
+
+      <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"}>
+        <View style={[styles.footer, { backgroundColor: isDarkMode ? '#121212' : '#FFF' }]}>
+          <View style={styles.inputRow}>
+            
+            {/* VOICE BUTTON */}
+            <TouchableOpacity 
+              style={[styles.micBtn, isListening && styles.micActive]} 
+              onLongPress={startListening}
+              onPressOut={stopListening}
+            >
+              <Ionicons name={isListening ? "mic" : "mic-outline"} size={24} color={isListening ? "#FFF" : "#007AFF"} />
+            </TouchableOpacity>
+
             <TextInput 
-              style={[styles.textInput, { color: isDarkMode ? '#FFF' : '#000' }]} 
-              placeholder="Message..." 
-              placeholderTextColor="#999"
-              value={input} 
-              onChangeText={setInput} 
+              style={[styles.input, { color: isDarkMode ? '#FFF' : '#000' }]}
+              placeholder={isListening ? "Listening..." : "Type or hold mic..."}
+              value={input}
+              onChangeText={setInput}
             />
-            <TouchableOpacity style={[styles.sendBtn, {backgroundColor: input ? '#007AFF' : '#ECEFF1'}]} onPress={handleSend}>
-              <Ionicons name="arrow-up" size={22} color={input ? "#fff" : "#B0BEC5"} />
+
+            <TouchableOpacity style={styles.sendBtn} onPress={handleSend}>
+              <Ionicons name="send" size={20} color="#FFF" />
             </TouchableOpacity>
           </View>
         </View>
@@ -147,21 +109,16 @@ const styles = StyleSheet.create({
   container: { flex: 1 },
   header: { height: 100, backgroundColor: '#007AFF', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 20, paddingTop: 35 },
   headerTitle: { color: '#fff', fontSize: 18, fontWeight: 'bold' },
-  tokenCount: { color: '#B9F6CA', fontSize: 11, fontWeight: 'bold' },
-  empty: { flex: 1, alignItems: 'center', marginTop: 100 },
-  emptyTitle: { fontSize: 20, fontWeight: 'bold', color: '#90A4AE' },
-  emptySub: { fontSize: 14, color: '#B0BEC5', marginTop: 10 },
-  msgWrapper: { marginBottom: 15, maxWidth: '82%' },
-  userWrapper: { alignSelf: 'flex-end' },
-  aiWrapper: { alignSelf: 'flex-start' },
-  bubble: { padding: 15, borderRadius: 24 },
-  userBubble: { backgroundColor: '#007AFF' },
-  aiBubble: { backgroundColor: '#FFF', borderWidth: 1, borderColor: '#ECEFF1' },
-  msgText: { fontSize: 16 },
-  footer: { padding: 15 },
-  inputCard: { flexDirection: 'row', borderRadius: 30, padding: 6, alignItems: 'center', borderWidth: 1 },
-  textInput: { flex: 1, paddingHorizontal: 15, fontSize: 16 },
-  sendBtn: { width: 48, height: 48, borderRadius: 24, justifyContent: 'center', alignItems: 'center' }
+  tokenCount: { color: '#B9F6CA', fontWeight: 'bold' },
+  bubble: { padding: 15, borderRadius: 20, marginBottom: 10, maxWidth: '80%' },
+  userBubble: { alignSelf: 'flex-end', backgroundColor: '#007AFF' },
+  aiBubble: { alignSelf: 'flex-start', backgroundColor: '#E0E0E0' },
+  footer: { padding: 15, borderTopWidth: 1, borderTopColor: '#EEE' },
+  inputRow: { flexDirection: 'row', alignItems: 'center' },
+  micBtn: { width: 45, height: 45, borderRadius: 23, borderWidth: 1, borderColor: '#007AFF', justifyContent: 'center', alignItems: 'center', marginRight: 10 },
+  micActive: { backgroundColor: '#FF3B30', borderColor: '#FF3B30' },
+  input: { flex: 1, height: 45, backgroundColor: '#F5F5F5', borderRadius: 23, paddingHorizontal: 15 },
+  sendBtn: { width: 45, height: 45, borderRadius: 23, backgroundColor: '#007AFF', justifyContent: 'center', alignItems: 'center', marginLeft: 10 }
 });
 
 export default ChatScreen;
