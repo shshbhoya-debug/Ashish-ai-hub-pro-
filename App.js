@@ -7,6 +7,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import OnboardingScreen from './src/screens/OnboardingScreen';
 import LoginScreen from './src/screens/LoginScreen';
 import MainTabs from './src/navigation/MainTabs';
+import CreateAgentScreen from './src/screens/CreateAgentScreen';
 import ChatScreen from './src/screens/ChatScreen';
 import WalletScreen from './src/screens/WalletScreen';
 import ProfileScreen from './src/screens/ProfileScreen';
@@ -58,6 +59,7 @@ export default function App() {
             <Stack.Screen name="Login" component={LoginScreen} />
             <Stack.Screen name="Main" component={MainTabs} />
             <Stack.Screen name="ChatScreen" component={ChatScreen} />
+          <Stack.Screen name="CreateAgentScreen" component={CreateAgentScreen} options={{ headerShown: false }} />
             <Stack.Screen name="WalletScreen" component={WalletScreen} />
             <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
             <Stack.Screen name="HistoryScreen" component={HistoryScreen} />

@@ -1,32 +1,41 @@
-import React, { useState, useContext, useRef } from 'react';
-import { 
-  View, Text, StyleSheet, SafeAreaView, TextInput, 
-  TouchableOpacity, FlatList, KeyboardAvoidingView, Platform, ActivityIndicator 
-} from 'react-native';
+import React, { useState, useContext, useEffect } from 'react';
+import { View, Text, StyleSheet, SafeAreaView, TextInput, TouchableOpacity, FlatList, KeyboardAvoidingView, Platform, ActivityIndicator, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Markdown from 'react-native-markdown-display';
 import { AppContext } from '../context/AppContext';
 import { callOpenRouter } from '../services/aiService';
 
-const agents = [
+const defaultAgents = [
   { id: '1', name: 'General AI', icon: 'chatbubble-ellipses', color: '#007AFF', prompt: 'You are a helpful assistant.' },
-  { id: '2', name: 'Code Wizard', icon: 'code-slash', color: '#AF52DE', prompt: 'You are a Senior Dev. Output code in markdown blocks.' },
-  { id: '3', name: 'Creative Writer', icon: 'pencil', color: '#FF9500', prompt: 'You are a creative writer. Use bold and italics for emphasis.' },
+  { id: '2', name: 'Code Wizard', icon: 'code-slash', color: '#AF52DE', prompt: 'You are a Senior Dev. Output code in markdown blocks.' }
 ];
 
 const ChatScreen = ({ navigation }) => {
   const { isDarkMode, accentColor, apiKey, updateTokens, tokens } = useContext(AppContext);
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
-  const [selectedAgent, setSelectedAgent] = useState(agents[0]);
+  const [agents, setAgents] = useState(defaultAgents);
+  const [selectedAgent, setSelectedAgent] = useState(defaultAgents[0]);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const loadCustomAgents = async () => {
+      try {
+        const stored = await AsyncStorage.getItem('@custom_agents');
+        if (stored) {
+          const customAgents = JSON.parse(stored);
+          setAgents([...defaultAgents, ...customAgents]);
+        }
+      } catch (e) { console.log(e); }
+    };
+    const unsubscribe = navigation.addListener('focus', loadCustomAgents);
+    return unsubscribe;
+  }, [navigation]);
 
   const handleSend = async () => {
     if (!input.trim() || loading) return;
-    if (tokens < 5) {
-      alert("Tokens low!");
-      return;
-    }
+    if (tokens < 5) { alert("Tokens low!"); return; }
 
     const userMsg = { id: Date.now(), text: input, sender: 'user' };
     setMessages(prev => [...prev, userMsg]);
@@ -52,6 +61,32 @@ const ChatScreen = ({ navigation }) => {
           <Ionicons name="chevron-back" size={24} color={isDarkMode ? '#FFF' : '#000'} />
         </TouchableOpacity>
         <Text style={[styles.headerTitle, { color: isDarkMode ? '#FFF' : '#000' }]}>{selectedAgent.name}</Text>
+        <Ionicons name={selectedAgent.icon} size={24} color={selectedAgent.color} />
+      </View>
+
+      {/* Agent Selector Slider */}
+      <View style={styles.agentSliderBox}>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+          {agents.map((ag) => (
+            <TouchableOpacity 
+              key={ag.id} 
+              onPress={() => setSelectedAgent(ag)}
+              style={[styles.agentChip, { backgroundColor: selectedAgent.id === ag.id ? ag.color : (isDarkMode ? '#1F1F1F' : '#FFF') }]}
+            >
+              <Ionicons name={ag.icon} size={16} color={selectedAgent.id === ag.id ? '#FFF' : ag.color} />
+              <Text style={{ marginLeft: 5, fontSize: 13, fontWeight: 'bold', color: selectedAgent.id === ag.id ? '#FFF' : (isDarkMode ? '#FFF' : '#000') }}>
+                {ag.name}
+              </Text>
+            </TouchableOpacity>
+          ))}
+          <TouchableOpacity 
+            style={[styles.agentChip, { backgroundColor: accentColor + '20', borderWidth: 1, borderColor: accentColor }]}
+            onPress={() => navigation.navigate('CreateAgentScreen')}
+          >
+            <Ionicons name="add" size={16} color={accentColor} />
+            <Text style={{ marginLeft: 5, fontSize: 13, fontWeight: 'bold', color: accentColor }}>New AI</Text>
+          </TouchableOpacity>
+        </ScrollView>
       </View>
 
       <FlatList 
@@ -77,7 +112,7 @@ const ChatScreen = ({ navigation }) => {
         <View style={[styles.inputArea, { backgroundColor: isDarkMode ? '#1F1F1F' : '#FFF' }]}>
           <TextInput 
             style={[styles.input, { color: isDarkMode ? '#FFF' : '#000' }]}
-            placeholder="Type a message..."
+            placeholder={`Chat with ${selectedAgent.name}...`}
             placeholderTextColor="#888"
             value={input}
             onChangeText={setInput}
@@ -94,8 +129,10 @@ const ChatScreen = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
-  header: { flexDirection: 'row', alignItems: 'center', padding: 20, paddingTop: 40 },
-  headerTitle: { fontSize: 18, fontWeight: '700', marginLeft: 10 },
+  header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: 20, paddingTop: 40 },
+  headerTitle: { fontSize: 18, fontWeight: '700', flex: 1, marginLeft: 15 },
+  agentSliderBox: { paddingHorizontal: 15, paddingBottom: 10, borderBottomWidth: 0.5, borderBottomColor: '#8884' },
+  agentChip: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 12, paddingVertical: 8, borderRadius: 20, marginRight: 10, elevation: 1 },
   msgContainer: { maxWidth: '85%', marginBottom: 10 },
   msgBox: { padding: 12, borderRadius: 18, elevation: 1 },
   inputArea: { flexDirection: 'row', alignItems: 'center', padding: 15, borderTopWidth: 0.5, borderTopColor: '#8884' },
