@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { 
   View, Text, TextInput, TouchableOpacity, StyleSheet, 
   SafeAreaView, FlatList, KeyboardAvoidingView, Platform, 
@@ -6,13 +6,24 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
-const ChatScreen = () => {
-  const [messages, setMessages] = useState([]);
-  const [input, setInput] = useState('');
-  const scrollRef = useRef();
+// --- ANIMATED MESSAGE COMPONENT ---
+const AnimatedMessage = ({ item }) => {
+  const slideAnim = useRef(new Animated.Value(20)).current;
+  const opacityAnim = useRef(new Animated.Value(0)).current;
 
-  const renderMessage = ({ item }) => (
-    <Animated.View style={[styles.msgWrapper, item.role === 'user' ? styles.userWrapper : styles.aiWrapper]}>
+  useEffect(() => {
+    Animated.parallel([
+      Animated.timing(slideAnim, { toValue: 0, duration: 400, useNativeDriver: true }),
+      Animated.timing(opacityAnim, { toValue: 1, duration: 400, useNativeDriver: true })
+    ]).start();
+  }, []);
+
+  return (
+    <Animated.View style={[
+      styles.msgWrapper, 
+      item.role === 'user' ? styles.userWrapper : styles.aiWrapper,
+      { opacity: opacityAnim, transform: [{ translateY: slideAnim }] }
+    ]}>
       <View style={[styles.bubble, item.role === 'user' ? styles.userBubble : styles.aiBubble]}>
         <Text style={[styles.msgText, { color: item.role === 'user' ? '#fff' : '#1A1A1A' }]}>
           {item.content}
@@ -21,52 +32,69 @@ const ChatScreen = () => {
       <Text style={styles.timeText}>Just now</Text>
     </Animated.View>
   );
+};
+
+const ChatScreen = () => {
+  const [messages, setMessages] = useState([]);
+  const [input, setInput] = useState('');
+  const scrollRef = useRef();
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="light-content" backgroundColor="#007AFF" />
+      <StatusBar barStyle="light-content" />
       
-      {/* --- HEADER --- */}
+      {/* --- HEADER WITH GLOW --- */}
       <View style={styles.header}>
-        <View style={styles.headerInfo}>
-          <View style={styles.profilePic}><Text style={styles.profileText}>A</Text></View>
-          <View style={{marginLeft: 10}}>
-            <Text style={styles.headerTitle}>Ashish AI Hub</Text>
-            <Text style={styles.headerStatus}>● Online</Text>
+        <View style={styles.headerLeft}>
+          <View style={styles.pfp}>
+            <Ionicons name="person" size={20} color="#007AFF" />
+            <View style={styles.glowDot} />
+          </View>
+          <View style={{marginLeft: 12}}>
+            <Text style={styles.headerTitle}>Ashish AI Hub Pro</Text>
+            <Text style={styles.onlineTxt}>Active Agent</Text>
           </View>
         </View>
-        <TouchableOpacity><Ionicons name="ellipsis-vertical" size={20} color="#fff" /></TouchableOpacity>
+        <TouchableOpacity style={styles.optBtn}>
+          <Ionicons name="shield-checkmark" size={20} color="#B9F6CA" />
+        </TouchableOpacity>
       </View>
 
       <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={{flex: 1}}>
         <FlatList 
           ref={scrollRef}
           data={messages}
-          renderItem={renderMessage}
+          renderItem={({item}) => <AnimatedMessage item={item} />}
           keyExtractor={(item, index) => index.toString()}
           contentContainerStyle={{padding: 20}}
-          onContentSizeChange={() => scrollRef.current.scrollToEnd()}
+          onContentSizeChange={() => scrollRef.current.scrollToEnd({animated: true})}
           ListEmptyComponent={() => (
             <View style={styles.empty}>
-              <Ionicons name="chatbubble-ellipses-outline" size={80} color="#D1E9FF" />
-              <Text style={styles.emptyTitle}>Chalo shuru karte hain!</Text>
-              <Text style={styles.emptySub}>Ashish AI Hub Pro aapki madad ke liye taiyar hai.</Text>
+              <View style={styles.iconCircle}>
+                <Ionicons name="flash" size={40} color="#007AFF" />
+              </View>
+              <Text style={styles.emptyTitle}>Powerful AI Dashboard</Text>
+              <Text style={styles.emptySub}>Aapka personal assistant tayyar hai. Kuch bhi puchiye!</Text>
             </View>
           )}
         />
 
-        {/* --- GLASS DESIGN INPUT --- */}
-        <View style={styles.inputArea}>
-          <View style={styles.glassInput}>
+        {/* --- PREMIUM INPUT BAR --- */}
+        <View style={styles.footer}>
+          <View style={styles.inputCard}>
+            <TouchableOpacity style={styles.addBtn}>
+              <Ionicons name="happy-outline" size={24} color="#546E7A" />
+            </TouchableOpacity>
             <TextInput 
               style={styles.textInput} 
-              placeholder="Ask me something..." 
+              placeholder="Message..." 
               placeholderTextColor="#90A4AE"
               value={input}
               onChangeText={setInput}
+              multiline
             />
             <TouchableOpacity 
-              style={[styles.sendBtn, {backgroundColor: input ? '#007AFF' : '#CFD8DC'}]}
+              style={[styles.sendBtn, {backgroundColor: input ? '#007AFF' : '#ECEFF1'}]}
               onPress={() => {
                 if(input) {
                   setMessages([...messages, {role: 'user', content: input}]);
@@ -74,7 +102,7 @@ const ChatScreen = () => {
                 }
               }}
             >
-              <Ionicons name="send" size={18} color="#fff" />
+              <Ionicons name="arrow-up" size={22} color={input ? "#fff" : "#B0BEC5"} />
             </TouchableOpacity>
           </View>
         </View>
@@ -84,37 +112,39 @@ const ChatScreen = () => {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#F0F4F8' },
+  container: { flex: 1, backgroundColor: '#FAFAFA' },
   header: { 
-    height: 90, backgroundColor: '#007AFF', flexDirection: 'row', 
-    alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 20, paddingTop: 30
+    height: 100, backgroundColor: '#007AFF', flexDirection: 'row', 
+    alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 20, paddingTop: 35
   },
-  headerInfo: { flexDirection: 'row', alignItems: 'center' },
-  profilePic: { width: 40, height: 40, borderRadius: 20, backgroundColor: 'rgba(255,255,255,0.2)', justifyContent: 'center', alignItems: 'center' },
-  profileText: { color: '#fff', fontWeight: 'bold', fontSize: 18 },
+  headerLeft: { flexDirection: 'row', alignItems: 'center' },
+  pfp: { width: 42, height: 42, borderRadius: 21, backgroundColor: '#fff', justifyContent: 'center', alignItems: 'center' },
+  glowDot: { width: 10, height: 10, borderRadius: 5, backgroundColor: '#4CAF50', position: 'absolute', right: 0, bottom: 0, borderWidth: 2, borderColor: '#007AFF' },
   headerTitle: { color: '#fff', fontSize: 18, fontWeight: 'bold' },
-  headerStatus: { color: '#B9F6CA', fontSize: 11, fontWeight: '600' },
+  onlineTxt: { color: '#B9F6CA', fontSize: 11, fontWeight: '600', textTransform: 'uppercase' },
   
-  empty: { flex: 1, alignItems: 'center', marginTop: 100 },
-  emptyTitle: { fontSize: 20, fontWeight: 'bold', color: '#455A64', marginTop: 20 },
-  emptySub: { fontSize: 14, color: '#90A4AE', textAlign: 'center', paddingHorizontal: 40, marginTop: 5 },
+  empty: { flex: 1, alignItems: 'center', marginTop: 80 },
+  iconCircle: { width: 80, height: 80, borderRadius: 40, backgroundColor: '#E3F2FD', justifyContent: 'center', alignItems: 'center' },
+  emptyTitle: { fontSize: 22, fontWeight: 'bold', color: '#263238', marginTop: 20 },
+  emptySub: { fontSize: 14, color: '#78909C', textAlign: 'center', paddingHorizontal: 50, marginTop: 10 },
 
-  msgWrapper: { marginBottom: 15, maxWidth: '85%' },
-  userWrapper: { alignSelf: 'flex-end', alignItems: 'flex-end' },
-  aiWrapper: { alignSelf: 'flex-start', alignItems: 'flex-start' },
-  bubble: { padding: 14, borderRadius: 22, shadowColor: '#000', shadowOffset: {width: 0, height: 1}, shadowOpacity: 0.1, elevation: 2 },
-  userBubble: { backgroundColor: '#007AFF', borderBottomRightRadius: 2 },
-  aiBubble: { backgroundColor: '#fff', borderBottomLeftRadius: 2 },
-  msgText: { fontSize: 16, lineHeight: 22 },
-  timeText: { fontSize: 10, color: '#90A4AE', marginTop: 5 },
+  msgWrapper: { marginBottom: 15, maxWidth: '82%' },
+  userWrapper: { alignSelf: 'flex-end' },
+  aiWrapper: { alignSelf: 'flex-start' },
+  bubble: { padding: 15, borderRadius: 24, shadowColor: '#000', shadowOffset: {width: 0, height: 2}, shadowOpacity: 0.05, elevation: 2 },
+  userBubble: { backgroundColor: '#007AFF', borderBottomRightRadius: 4 },
+  aiBubble: { backgroundColor: '#fff', borderBottomLeftRadius: 4, borderWidth: 1, borderColor: '#ECEFF1' },
+  msgText: { fontSize: 16, lineHeight: 24 },
+  timeText: { fontSize: 10, color: '#CFD8DC', marginTop: 5, marginLeft: 5 },
 
-  inputArea: { padding: 15, backgroundColor: 'transparent' },
-  glassInput: { 
+  footer: { padding: 15, backgroundColor: 'transparent' },
+  inputCard: { 
     flexDirection: 'row', backgroundColor: '#fff', borderRadius: 30, 
-    padding: 8, alignItems: 'center', elevation: 4, shadowOpacity: 0.1
+    padding: 6, alignItems: 'center', borderWidth: 1, borderColor: '#ECEFF1'
   },
-  textInput: { flex: 1, paddingHorizontal: 15, fontSize: 16, color: '#263238' },
-  sendBtn: { width: 45, height: 45, borderRadius: 22.5, justifyContent: 'center', alignItems: 'center' }
+  addBtn: { paddingHorizontal: 12 },
+  textInput: { flex: 1, maxHeight: 100, fontSize: 16, color: '#37474F', paddingVertical: 8 },
+  sendBtn: { width: 48, height: 48, borderRadius: 24, justifyContent: 'center', alignItems: 'center' }
 });
 
 export default ChatScreen;
