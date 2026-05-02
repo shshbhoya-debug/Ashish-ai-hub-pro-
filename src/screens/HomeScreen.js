@@ -35,17 +35,17 @@ const HomeScreen = ({ navigation }) => {
 
         {/* --- STATS CARD --- */}
         <View style={styles.statsCard}>
-          <View style={styles.statItem}>
+          <View style={styles.() => navigation.navigate('WalletScreen')}>
             <Text style={styles.statNum}>Pro</Text>
             <Text style={styles.statLabel}>Plan</Text>
           </View>
           <View style={styles.divider} />
-          <View style={styles.statItem}>
+          <View style={styles.() => navigation.navigate('WalletScreen')}>
             <Text style={styles.statNum}>∞</Text>
             <Text style={styles.statLabel}>Tokens</Text>
           </View>
           <View style={styles.divider} />
-          <View style={styles.statItem}>
+          <View style={styles.() => navigation.navigate('WalletScreen')}>
             <Text style={[styles.statNum, {color: '#4CD964'}]}>Online</Text>
             <Text style={styles.statLabel}>Status</Text>
           </View>
@@ -99,7 +99,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#1A1A1A', borderRadius: 20, padding: 20, 
     flexDirection: 'row', justifyContent: 'space-around', marginBottom: 30 
   },
-  statItem: { alignItems: 'center' },
+  () => navigation.navigate('WalletScreen'): { alignItems: 'center' },
   statNum: { color: '#fff', fontSize: 18, fontWeight: 'bold' },
   statLabel: { color: '#999', fontSize: 12, marginTop: 4 },
   divider: { width: 1, height: '100%', backgroundColor: '#333' },
