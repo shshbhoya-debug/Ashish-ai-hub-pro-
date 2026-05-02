@@ -93,6 +93,7 @@ const HomeScreen = ({ navigation }) => {
           <FeatureCard title="Chat Pro" icon="chatbubbles" color="#007AFF" screen="ChatScreen" desc="Talk to Gemini AI" />
           <FeatureCard title="Art Gen" icon="image" color="#AF52DE" screen="ImageGenScreen" desc="Create AI Images" />
           <FeatureCard title="Gaming" icon="game-controller" color="#FF2D55" screen="GamingScreen" desc="AI Battle Zone" />
+          <FeatureCard title='AI Architect' icon='construct' color='#FFD700' screen='ArchitectScreen' desc='Build Full Projects' />
           <FeatureCard title="Ads" icon="play-circle" color="#34C759" screen="WalletScreen" desc="Earn Free Tokens" />
         </View>
       </ScrollView>

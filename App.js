@@ -7,6 +7,7 @@ import { AppProvider, AppContext } from './src/context/AppContext';
 
 // Screens
 import SplashScreen from './src/screens/SplashScreen';
+import ArchitectScreen from './src/screens/ArchitectScreen';
 import OnboardingScreen from './src/screens/OnboardingScreen';
 import LoginScreen from './src/screens/LoginScreen';
 import HomeScreen from './src/screens/HomeScreen';
@@ -70,6 +71,7 @@ export default function App() {
           <Stack.Screen name="GamingScreen" component={GamingScreen} />
           <Stack.Screen name="SettingsScreen" component={SettingsScreen} />
           <Stack.Screen name="SupportScreen" component={SupportScreen} />
+          <Stack.Screen name="ArchitectScreen" component={ArchitectScreen} />
           <Stack.Screen name="ChatScreen" component={ChatScreen} />
           <Stack.Screen name="ImageGenScreen" component={ImageGenScreen} />
           <Stack.Screen name="WalletScreen" component={WalletScreen} />
