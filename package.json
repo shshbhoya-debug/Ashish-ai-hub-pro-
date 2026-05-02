@@ -14,7 +14,8 @@
     "@react-navigation/bottom-tabs": "^7.15.11",
     "dotenv": "^16.0.3",
     "expo": "^55.0.19",
-    "expo-speech": "~55.0.13"
+    "expo-speech": "~55.0.13",
+    "react-native-webview": "13.16.0"
   },
   "engines": {
     "node": ">=14.0.0"
