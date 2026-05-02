@@ -1,3 +1,4 @@
+import { AppContext } from '../context/AppContext';
 import React from 'react';
 import { 
   View, Text, StyleSheet, SafeAreaView, TouchableOpacity, 
@@ -6,6 +7,7 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 
 const ProfileScreen = ({ navigation }) => {
+  const { tokens } = React.useContext(AppContext);
   
   const MenuOption = ({ icon, title, subtitle, color, isLast }) => (
     <TouchableOpacity style={[styles.menuItem, isLast && { borderBottomWidth: 0 }]}>
@@ -58,7 +60,7 @@ const ProfileScreen = ({ navigation }) => {
         {/* STATS SECTION */}
         <View style={styles.statsRow}>
           <View style={styles.statBox}>
-            <Text style={styles.statVal}>1.2k</Text>
+            <Text style={styles.statVal}>{tokens}</Text>
             <Text style={styles.statLab}>Prompts</Text>
           </View>
           <View style={styles.statDivider} />
