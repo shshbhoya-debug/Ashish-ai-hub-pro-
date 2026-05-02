@@ -1,34 +1,29 @@
 import React from 'react';
+import { View, Text, StyleSheet, SafeAreaView, ScrollView, TouchableOpacity } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 
-const TermsScreen = () => {
-  return (
-    <div style={{ padding: '20px', fontFamily: 'Arial', lineHeight: '1.6' }}>
-      <h2 style={{ color: '#075e54' }}>Terms & Privacy 📜</h2>
-      <p style={{ fontSize: '12px', color: '#888' }}>Last Updated: April 2026</p>
-      
-      <div style={{ marginTop: '20px', textAlign: 'left' }}>
-        <h4 style={{ color: '#333' }}>1. Privacy Policy</h4>
-        <p style={{ fontSize: '14px', color: '#555' }}>
-          Hum aapka data kisi teesre party ko nahi bechte. Aapki chat history sirf AI processing ke liye use hoti hai.
-        </p>
+const TermsScreen = ({ navigation }) => (
+  <SafeAreaView style={styles.container}>
+    <View style={styles.header}>
+      <TouchableOpacity onPress={() => navigation.goBack()}><Ionicons name="arrow-back" size={24} /></TouchableOpacity>
+      <Text style={styles.headerTitle}>Terms & Privacy</Text>
+    </View>
+    <ScrollView style={{padding: 20}}>
+      <Text style={styles.h1}>1. Introduction</Text>
+      <Text style={styles.p}>Welcome to Ashish AI Hub Pro. By using our app, you agree to these terms...</Text>
+      <Text style={styles.h1}>2. Usage Policy</Text>
+      <Text style={styles.p}>Aap AI models ka use illegal kaam ke liye nahi kar sakte. Tokens non-refundable hain.</Text>
+      <Text style={styles.h1}>3. Data Privacy</Text>
+      <Text style={styles.p}>Hum aapke personal data ko secure rakhte hain aur kisi third party ko nahi bechte.</Text>
+    </ScrollView>
+  </SafeAreaView>
+);
 
-        <h4 style={{ color: '#333' }}>2. AI Usage</h4>
-        <p style={{ fontSize: '14px', color: '#555' }}>
-          Ashish AI Hub Pro ke dwara generate kiya gaya content AI-based hai. Iska sahi upyog karna user ki zimmedari hai.
-        </p>
-
-        <h4 style={{ color: '#333' }}>3. Tokens & Refund</h4>
-        <p style={{ fontSize: '14px', color: '#555' }}>
-          Ek baar khareede gaye tokens refund nahi kiye ja sakte. Tokens ki validity 1 saal tak rahegi.
-        </p>
-      </div>
-
-      <div style={{ marginTop: '30px', padding: '15px', backgroundColor: '#e8f5e9', borderRadius: '10px' }}>
-        <p style={{ margin: 0, fontSize: '13px', fontWeight: 'bold' }}>Humein bharosa hai ki aap hamari policy ka samman karenge.</p>
-      </div>
-    </div>
-  );
-};
-
+const styles = StyleSheet.create({
+  container: { flex: 1, backgroundColor: '#FFF' },
+  header: { flexDirection: 'row', alignItems: 'center', padding: 20, borderBottomWidth: 1, borderBottomColor: '#EEE' },
+  headerTitle: { fontSize: 18, fontWeight: 'bold', marginLeft: 15 },
+  h1: { fontSize: 18, fontWeight: 'bold', marginTop: 20, color: '#007AFF' },
+  p: { fontSize: 14, color: '#666', marginTop: 10, lineHeight: 22 }
+});
 export default TermsScreen;
-            

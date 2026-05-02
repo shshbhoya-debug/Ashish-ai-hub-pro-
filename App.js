@@ -10,6 +10,8 @@ import ImageGenScreen from './src/screens/ImageGenScreen';
 import ProfileScreen from './src/screens/ProfileScreen';
 import SettingsScreen from './src/screens/SettingsScreen';
 import SupportScreen from './src/screens/SupportScreen';
+import NotificationScreen from './src/screens/NotificationScreen';
+import TermsScreen from './src/screens/TermsScreen';
 import WalletScreen from './src/screens/WalletScreen';
 import GamingScreen from './src/screens/GamingScreen';
 
@@ -28,6 +30,8 @@ export default function App() {
         <Stack.Screen name="WalletScreen" component={WalletScreen} />
         <Stack.Screen name="SettingsScreen" component={SettingsScreen} />
         <Stack.Screen name="SupportScreen" component={SupportScreen} />
+        <Stack.Screen name="NotificationScreen" component={NotificationScreen} />
+        <Stack.Screen name="TermsScreen" component={TermsScreen} />
         <Stack.Screen name="GamingScreen" component={GamingScreen} />
       </Stack.Navigator>
     </NavigationContainer>

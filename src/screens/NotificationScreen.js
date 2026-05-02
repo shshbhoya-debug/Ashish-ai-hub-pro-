@@ -1,33 +1,48 @@
 import React from 'react';
+import { View, Text, StyleSheet, SafeAreaView, FlatList, TouchableOpacity } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 
-const NotificationScreen = () => {
-  const alerts = [
-    { id: 1, title: '🔥 New AI Model!', message: 'Gemini 2.0 is now live in your app.', time: '2h ago', color: '#ff4757' },
-    { id: 2, title: '🎁 Weekend Offer', message: 'Get 500 extra tokens on your next recharge.', time: '5h ago', color: '#2ed573' },
-    { id: 3, title: '🔒 Security Alert', message: 'Your password was changed successfully.', time: 'Yesterday', color: '#1e90ff' },
+const NotificationScreen = ({ navigation }) => {
+  const data = [
+    { id: '1', title: 'Welcome Gift! 🎁', desc: 'Aapko 50 free tokens mile hain.', time: '2h ago', icon: 'gift', color: '#FF9500' },
+    { id: '2', title: 'New Model Alert ⚡', desc: 'Gemini 2.0 Flash ab live hai.', time: '5h ago', icon: 'flash', color: '#007AFF' },
+    { id: '3', title: 'System Update', desc: 'App performance improve ki gayi hai.', time: '1d ago', icon: 'settings', color: '#34C759' },
   ];
 
   return (
-    <div style={{ padding: '20px', fontFamily: 'Arial' }}>
-      <h2 style={{ color: '#2f3542' }}>Notifications 🔔</h2>
-      <div style={{ marginTop: '20px' }}>
-        {alerts.map(alert => (
-          <div key={alert.id} style={{
-            padding: '15px',
-            borderRadius: '12px',
-            backgroundColor: '#fff',
-            marginBottom: '15px',
-            boxShadow: '0 2px 5px rgba(0,0,0,0.1)',
-            borderLeft: `6px solid ${alert.color}`
-          }}>
-            <div style={{ fontWeight: 'bold', fontSize: '16px' }}>{alert.title}</div>
-            <div style={{ fontSize: '14px', color: '#555', marginTop: '5px' }}>{alert.message}</div>
-            <div style={{ fontSize: '11px', color: '#aaa', marginTop: '8px', textAlign: 'right' }}>{alert.time}</div>
-          </div>
-        ))}
-      </div>
-    </div>
+    <SafeAreaView style={styles.container}>
+      <View style={styles.header}>
+        <TouchableOpacity onPress={() => navigation.goBack()}><Ionicons name="arrow-back" size={24} /></TouchableOpacity>
+        <Text style={styles.headerTitle}>Notifications</Text>
+      </View>
+      <FlatList 
+        data={data}
+        keyExtractor={item => item.id}
+        renderItem={({item}) => (
+          <View style={styles.card}>
+            <View style={[styles.iconBox, {backgroundColor: item.color + '20'}]}>
+              <Ionicons name={item.icon} size={24} color={item.color} />
+            </View>
+            <View style={{flex: 1, marginLeft: 15}}>
+              <Text style={styles.title}>{item.title}</Text>
+              <Text style={styles.desc}>{item.desc}</Text>
+              <Text style={styles.time}>{item.time}</Text>
+            </View>
+          </View>
+        )}
+      />
+    </SafeAreaView>
   );
 };
 
+const styles = StyleSheet.create({
+  container: { flex: 1, backgroundColor: '#F8F9FB' },
+  header: { flexDirection: 'row', alignItems: 'center', padding: 20, backgroundColor: '#FFF' },
+  headerTitle: { fontSize: 18, fontWeight: 'bold', marginLeft: 15 },
+  card: { flexDirection: 'row', backgroundColor: '#FFF', padding: 15, marginHorizontal: 20, marginTop: 10, borderRadius: 15, alignItems: 'center' },
+  iconBox: { width: 50, height: 50, borderRadius: 25, justifyContent: 'center', alignItems: 'center' },
+  title: { fontSize: 15, fontWeight: 'bold' },
+  desc: { fontSize: 13, color: '#666', marginTop: 2 },
+  time: { fontSize: 11, color: '#999', marginTop: 5 }
+});
 export default NotificationScreen;
