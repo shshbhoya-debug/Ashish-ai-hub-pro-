@@ -1,121 +1,98 @@
-import { AppContext } from '../context/AppContext';
-import React from 'react';
+import React, { useState, useContext } from 'react';
 import { 
   View, Text, StyleSheet, SafeAreaView, TouchableOpacity, 
-  Image, ScrollView, Switch, StatusBar 
+  TextInput, Image, ScrollView, Alert 
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { AppContext } from '../context/AppContext';
 
-const ProfileScreen = ({ navigation }) => {
-  const { tokens } = React.useContext(AppContext);
-  
-  const MenuOption = ({ icon, title, subtitle, color, isLast }) => (
-    <TouchableOpacity style={[styles.menuItem, isLast && { borderBottomWidth: 0 }]}>
-      <View style={[styles.iconCircle, { backgroundColor: color + '15' }]}>
-        <Ionicons name={icon} size={22} color={color} />
-      </View>
-      <View style={{ flex: 1, marginLeft: 15 }}>
-        <Text style={styles.menuTitle}>{title}</Text>
-        {subtitle && <Text style={styles.menuSub}>{subtitle}</Text>}
-      </View>
-      <Ionicons name="chevron-forward" size={18} color="#CCC" />
-    </TouchableOpacity>
-  );
+const ProfileScreen = () => {
+  const { isDarkMode, userName, updateUserName } = useContext(AppContext);
+  const [isEditing, setIsEditing] = useState(false);
+  const [newName, setNewName] = useState(userName);
+
+  const handleSave = () => {
+    updateUserName(newName);
+    setIsEditing(false);
+    Alert.alert("Success", "Profile updated successfully!");
+  };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="dark-content" />
-      
-      {/* HEADER */}
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Ionicons name="arrow-back" size={24} color="#1A1A1A" />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>My Profile</Text>
-        <TouchableOpacity>
-          <Ionicons name="pencil" size={20} color="#007AFF" />
-        </TouchableOpacity>
-      </View>
-
-      <ScrollView contentContainerStyle={{ paddingBottom: 40 }}>
+    <SafeAreaView style={[styles.container, { backgroundColor: isDarkMode ? '#121212' : '#F8F9FB' }]}>
+      <ScrollView contentContainerStyle={{ paddingBottom: 30 }}>
         
-        {/* USER INFO */}
-        <View style={styles.profileCard}>
-          <View style={styles.avatarWrapper}>
+        {/* Header Background */}
+        <View style={styles.headerBg}>
+          <View style={styles.avatarContainer}>
             <View style={styles.avatar}>
-               <Text style={styles.avatarInitial}>A</Text>
+              <Text style={styles.avatarTxt}>{userName.charAt(0).toUpperCase()}</Text>
             </View>
-            <TouchableOpacity style={styles.editPfp}>
-              <Ionicons name="camera" size={16} color="#FFF" />
+            <TouchableOpacity style={styles.editIcon}>
+              <Ionicons name="camera" size={20} color="#FFF" />
             </TouchableOpacity>
           </View>
-          <Text style={styles.userName}>Ashish</Text>
-          <Text style={styles.userEmail}>developer@ashishai.pro</Text>
-          <View style={styles.proBadge}>
-            <Ionicons name="star" size={14} color="#FFD700" />
-            <Text style={styles.proText}>PRO MEMBER</Text>
-          </View>
         </View>
 
-        {/* STATS SECTION */}
-        <View style={styles.statsRow}>
-          <View style={styles.statBox}>
-            <Text style={styles.statVal}>{tokens}</Text>
-            <Text style={styles.statLab}>Prompts</Text>
+        <View style={styles.content}>
+          <View style={styles.section}>
+            <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
+              <Text style={[styles.label, { color: isDarkMode ? '#AAA' : '#555' }]}>Full Name</Text>
+              <TouchableOpacity onPress={() => isEditing ? handleSave() : setIsEditing(true)}>
+                <Text style={{color: '#007AFF', fontWeight: 'bold'}}>{isEditing ? 'Save' : 'Edit'}</Text>
+              </TouchableOpacity>
+            </View>
+            
+            {isEditing ? (
+              <TextInput 
+                style={[styles.input, { backgroundColor: isDarkMode ? '#1F1F1F' : '#FFF', color: isDarkMode ? '#FFF' : '#000' }]}
+                value={newName}
+                onChangeText={setNewName}
+                autoFocus
+              />
+            ) : (
+              <Text style={[styles.info, { color: isDarkMode ? '#FFF' : '#1A1A1A' }]}>{userName}</Text>
+            )}
           </View>
-          <View style={styles.statDivider} />
-          <View style={styles.statBox}>
-            <Text style={styles.statVal}>85</Text>
-            <Text style={styles.statLab}>Images</Text>
+
+          <View style={styles.section}>
+            <Text style={[styles.label, { color: isDarkMode ? '#AAA' : '#555' }]}>Email Address</Text>
+            <Text style={[styles.info, { color: isDarkMode ? '#888' : '#666' }]}>ashish.dev@hubpro.ai</Text>
           </View>
+
+          <View style={styles.section}>
+            <Text style={[styles.label, { color: isDarkMode ? '#AAA' : '#555' }]}>Account Status</Text>
+            <View style={styles.statusBadge}>
+              <Ionicons name="checkmark-circle" size={16} color="#4CD964" />
+              <Text style={styles.statusText}>Premium Developer</Text>
+            </View>
+          </View>
+
+          <TouchableOpacity style={styles.logoutBtn}>
+            <Ionicons name="log-out-outline" size={20} color="#FF3B30" />
+            <Text style={styles.logoutText}> Logout Account</Text>
+          </TouchableOpacity>
         </View>
-
-        {/* SETTINGS GROUP */}
-        <View style={styles.menuGroup}>
-          <Text style={styles.groupLabel}>Account Settings</Text>
-          <MenuOption icon="person-outline" title="Personal Info" subtitle="Manage your account" color="#007AFF" />
-          <MenuOption icon="notifications-outline" title="Notifications" subtitle="Alerts & Sound" color="#FF9500" />
-          <MenuOption icon="wallet-outline" title="Subscription" subtitle="Manage plan & billing" color="#34C759" />
-          <MenuOption icon="shield-checkmark-outline" title="Privacy" color="#AF52DE" isLast />
-        </View>
-
-        {/* LOGOUT */}
-        <TouchableOpacity style={styles.logoutBtn}>
-          <Ionicons name="log-out-outline" size={20} color="#FF3B30" />
-          <Text style={styles.logoutText}>Log Out</Text>
-        </TouchableOpacity>
-
       </ScrollView>
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#F8F9FB' },
-  header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', padding: 20, backgroundColor: '#FFF' },
-  headerTitle: { fontSize: 18, fontWeight: 'bold' },
-  profileCard: { alignItems: 'center', backgroundColor: '#FFF', paddingBottom: 25 },
-  avatarWrapper: { width: 100, height: 100, marginBottom: 15 },
-  avatar: { width: 100, height: 100, borderRadius: 50, backgroundColor: '#007AFF', justifyContent: 'center', alignItems: 'center' },
-  avatarInitial: { color: '#FFF', fontSize: 40, fontWeight: 'bold' },
-  editPfp: { position: 'absolute', bottom: 0, right: 0, backgroundColor: '#1A1A1A', padding: 8, borderRadius: 20, borderWidth: 3, borderColor: '#FFF' },
-  userName: { fontSize: 22, fontWeight: 'bold', color: '#1A1A1A' },
-  userEmail: { fontSize: 14, color: '#666', marginTop: 4 },
-  proBadge: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#1A1A1A', paddingHorizontal: 12, paddingVertical: 6, borderRadius: 20, marginTop: 12 },
-  proText: { color: '#FFD700', fontSize: 11, fontWeight: 'bold', marginLeft: 6 },
-  statsRow: { flexDirection: 'row', backgroundColor: '#FFF', paddingVertical: 20, borderTopWidth: 1, borderBottomWidth: 1, borderColor: '#F0F0F0' },
-  statBox: { flex: 1, alignItems: 'center' },
-  statVal: { fontSize: 18, fontWeight: 'bold' },
-  statLab: { fontSize: 12, color: '#999', marginTop: 2 },
-  statDivider: { width: 1, height: '100%', backgroundColor: '#F0F0F0' },
-  menuGroup: { marginTop: 25, backgroundColor: '#FFF', paddingHorizontal: 20 },
-  groupLabel: { fontSize: 13, fontWeight: 'bold', color: '#999', marginTop: 20, marginBottom: 10, textTransform: 'uppercase' },
-  menuItem: { flexDirection: 'row', alignItems: 'center', paddingVertical: 15, borderBottomWidth: 1, borderBottomColor: '#F0F0F0' },
-  iconCircle: { width: 40, height: 40, borderRadius: 10, justifyContent: 'center', alignItems: 'center' },
-  menuTitle: { fontSize: 16, fontWeight: '600', color: '#1A1A1A' },
-  menuSub: { fontSize: 12, color: '#999', marginTop: 2 },
-  logoutBtn: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginTop: 30, padding: 15 },
-  logoutText: { color: '#FF3B30', fontSize: 16, fontWeight: 'bold', marginLeft: 8 }
+  container: { flex: 1 },
+  headerBg: { height: 180, backgroundColor: '#007AFF', alignItems: 'center', justifyContent: 'flex-end', paddingBottom: 20 },
+  avatarContainer: { width: 100, height: 100, marginBottom: -50 },
+  avatar: { width: 100, height: 100, borderRadius: 50, backgroundColor: '#1A1A1A', borderWidth: 4, borderColor: '#FFF', justifyContent: 'center', alignItems: 'center' },
+  avatarTxt: { fontSize: 40, fontWeight: 'bold', color: '#FFF' },
+  editIcon: { position: 'absolute', bottom: 5, right: 5, backgroundColor: '#333', padding: 6, borderRadius: 15 },
+  content: { marginTop: 60, paddingHorizontal: 20 },
+  section: { marginBottom: 25, borderBottomWidth: 1, borderBottomColor: '#EEE', paddingBottom: 15 },
+  label: { fontSize: 12, fontWeight: 'bold', textTransform: 'uppercase', marginBottom: 8 },
+  info: { fontSize: 18, fontWeight: '500' },
+  input: { height: 50, borderRadius: 12, paddingHorizontal: 15, fontSize: 18, borderWidth: 1, borderColor: '#007AFF' },
+  statusBadge: { flexDirection: 'row', alignItems: 'center', marginTop: 5 },
+  statusText: { color: '#4CD964', marginLeft: 5, fontWeight: 'bold' },
+  logoutBtn: { flexDirection: 'row', marginTop: 40, justifyContent: 'center', alignItems: 'center' },
+  logoutText: { color: '#FF3B30', fontSize: 16, fontWeight: 'bold' }
 });
 
 export default ProfileScreen;
