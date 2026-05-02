@@ -28,7 +28,7 @@ const HomeScreen = ({ navigation }) => {
             <Text style={styles.greeting}>Hi, Ashish! 👋</Text>
             <Text style={styles.subGreeting}>Kaise help karun aaj?</Text>
           </View>
-          <TouchableOpacity style={styles.pfpCircle}>
+          <TouchableOpacity style={styles.pfpCircle} onPress={() => navigation.navigate('ProfileScreen')}>
             <Ionicons name="person" size={24} color="#007AFF" />
           </TouchableOpacity>
         </View>
