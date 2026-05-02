@@ -1,0 +1,20 @@
+  --non-interactive is not supported, use $CI=1 instead
+env: load .env
+env: export OPENROUTER_API_KEY
+Starting project at /workspaces/Ashish-ai-hub-pro-
+Starting Metro Bundler
+
+ ERROR  An unknown error occurred while installing React Native DevTools. Details:
+
+/workspaces/Ashish-ai-hub-pro-/node_modules/@react-native/debugger-shell/bin/react-native-devtools: error while loading shared libraries: libatk-1.0.so.0: cannot open shared object file: No such file or directory
+
+Tunnel connected.
+Tunnel connected.
+Tunnel ready.
+The following packages should be updated for best compatibility with the installed expo version:
+  react@18.2.0 - expected version: 19.2.0
+  react-native@0.72.3 - expected version: 0.83.6
+Your project may not work correctly until you install the expected versions of the packages.
+Waiting on http://localhost:8081
+Logs for your project will appear below.
+Killed

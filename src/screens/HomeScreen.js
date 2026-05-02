@@ -58,7 +58,7 @@ const HomeScreen = ({ navigation }) => {
             <TouchableOpacity 
               key={item.id} 
               style={[styles.card, { borderTopColor: item.color }]}
-              onPress={() => item.screen === 'Chat' ? item.screen === 'Chat' ? navigation.navigate('ChatScreen') : navigation.navigate('ImageGenScreen') : null}
+              onPress={() => item.screen === 'Chat' ? item.screen === 'Chat' ? navigation.navigate('ChatScreen') : item.screen === 'ImageGen' ? navigation.navigate('ImageGenScreen') : navigation.navigate('GamingScreen') : null}
             >
               <View style={[styles.iconBox, { backgroundColor: item.color + '15' }]}>
                 <Ionicons name={item.icon} size={30} color={item.color} />
