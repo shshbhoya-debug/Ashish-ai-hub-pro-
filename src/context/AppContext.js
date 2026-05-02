@@ -7,27 +7,30 @@ export const AppProvider = ({ children }) => {
   const [tokens, setTokens] = useState(1250);
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [userName, setUserName] = useState('Ashish');
-  const [apiKey, setApiKey] = useState('');
-  const [ghToken, setGhToken] = useState('');
+  const [accentColor, setAccentColor] = useState('#007AFF'); // Default Blue
   const [transactions, setTransactions] = useState([]);
 
   useEffect(() => { loadData(); }, []);
 
   const loadData = async () => {
     try {
-      const keys = ['user_tokens', 'app_theme', 'user_name', 'api_key', 'gh_token', 'wallet_history'];
+      const keys = ['user_tokens', 'app_theme', 'user_name', 'accent_color', 'wallet_history'];
       const results = await AsyncStorage.multiGet(keys);
       results.forEach(([key, value]) => {
         if (value !== null) {
           if (key === 'user_tokens') setTokens(parseInt(value));
           if (key === 'app_theme') setIsDarkMode(value === 'dark');
           if (key === 'user_name') setUserName(value);
-          if (key === 'api_key') setApiKey(value);
-          if (key === 'gh_token') setGhToken(value);
+          if (key === 'accent_color') setAccentColor(value);
           if (key === 'wallet_history') setTransactions(JSON.parse(value));
         }
       });
     } catch (e) { console.error(e); }
+  };
+
+  const updateAccentColor = async (color) => {
+    setAccentColor(color);
+    await AsyncStorage.setItem('accent_color', color);
   };
 
   const updateTokens = async (amount, reason) => {
@@ -45,22 +48,10 @@ export const AppProvider = ({ children }) => {
     await AsyncStorage.setItem('user_name', name);
   };
 
-  const toggleTheme = async () => {
-    const newTheme = !isDarkMode;
-    setIsDarkMode(newTheme);
-    await AsyncStorage.setItem('app_theme', newTheme ? 'dark' : 'light');
-  };
-
-  const saveDevKeys = async (key, token) => {
-    setApiKey(key); setGhToken(token);
-    await AsyncStorage.setItem('api_key', key);
-    await AsyncStorage.setItem('gh_token', token);
-  };
-
   return (
     <AppContext.Provider value={{ 
-      tokens, updateTokens, isDarkMode, toggleTheme, 
-      userName, updateUserName, apiKey, ghToken, saveDevKeys, transactions 
+      tokens, updateTokens, isDarkMode, accentColor, updateAccentColor,
+      userName, updateUserName, transactions 
     }}>
       {children}
     </AppContext.Provider>

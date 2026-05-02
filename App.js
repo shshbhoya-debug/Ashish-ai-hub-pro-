@@ -16,6 +16,7 @@ import ProjectDetailScreen from './src/screens/ProjectDetailScreen';
 import DevSettingsScreen from './src/screens/DevSettingsScreen';
 import PreviewScreen from './src/screens/PreviewScreen';
 import SecurityScreen from './src/screens/SecurityScreen';
+import ThemeScreen from './src/screens/ThemeScreen';
 import DataManagementScreen from './src/screens/DataManagementScreen';
 import NotificationScreen from './src/screens/NotificationScreen';
 import SupportScreen from './src/screens/SupportScreen';
@@ -68,6 +69,7 @@ export default function App() {
             <Stack.Screen name="SupportScreen" component={SupportScreen} />
           <Stack.Screen name="NotificationScreen" component={NotificationScreen} />
           <Stack.Screen name="DataManagementScreen" component={DataManagementScreen} />
+          <Stack.Screen name="ThemeScreen" component={ThemeScreen} />
             <Stack.Screen name="WalletHistoryScreen" component={WalletHistoryScreen} />
           </Stack.Navigator>
         )}
