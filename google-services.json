@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "116291591578",
+    "project_id": "ashish-ai-hub-pro",
+    "storage_bucket": "ashish-ai-hub-pro.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:116291591578:android:d324b4b9f456c6d00e2e23",
+        "android_client_info": {
+          "package_name": "com.ashish.aihubpro"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDoWNU8uMh_AkQTsajM2iw14Huu_bofecA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
